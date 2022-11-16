@@ -1,0 +1,36 @@
+# CONFIGURATION FILE 
+# All paths are to be given without final slash.
+
+# Path 
+path0: '/Users/isler/imperial/RR/t106a/sims/Re48000/simFine_15_25/vis/post'
+pathExp: '/Users/isler/imperial/RR/t106a/exp'
+
+# File
+fileF: 'wallAvgWSS'
+fileE: 'expT106A'
+fileI: 'inlet'
+fileO: 'exit'
+nfiles: 1 # how many compressible flow folders we have?
+
+#Non-dimensional parameters
+#gamma
+gamma: 1.4
+# Chord
+C: 1 
+# Picth
+Py: 0.799
+# Axial chord
+Cax: 0.859
+# Dynamic viscosity
+mu: 2.08333e-5
+# pinf
+pInf: 12.0965 # Pa
+# rhoInf
+rhoInf: 1.0 # Kg/m3
+# Gas constant
+R: 12.0965
+
+# Mach number
+#Ma1: 0.0310701406
+# Reynold number
+#Re1: 58581
