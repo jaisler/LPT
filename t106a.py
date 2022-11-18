@@ -10,11 +10,6 @@ with open(r'configuration.yaml') as file:
     # scalar values to Python the dictionary format
     params = yaml.load(file, Loader=yaml.FullLoader)
 
-#uInf = params['Ma1']*cInf
-#mu = params['rhoInf']*uInf*params['C']/params['Re1']
-#gcoeff = (gamma - 1) / 2.0 
-#gpow = gamma / (gamma - 1)
-
 #### Exit ###
 objExit = DataSlice(params, 'exit')
 ye = objExit.GetY()
@@ -66,6 +61,18 @@ print('P1=',P1)
 
 # Pressure ratio
 print('P2/P1=',P2/P1)
+
+# Exit Isentropic Mach Number (Mass average)
+gcoeff = 2.0 / (params['gamma'] - 1) 
+gpow = (params['gamma'] - 1) / params['gamma']
+Ma1 = np.sqrt(((P1/P1_s)**(gpow) - 1) * gcoeff)
+print('Ma1=', Ma1)
+
+# Exit Isentropic Mach Number (Mass average)
+gcoeff = 2.0 / (params['gamma'] - 1) 
+gpow = (params['gamma'] - 1) / params['gamma']
+Ma2is = np.sqrt(((P1/P2)**(gpow) - 1) * gcoeff)
+print('Ma2is=', Ma2is)
 
 ### Blade ###
 # Initalisation: Data from .csv (wall)
