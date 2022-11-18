@@ -62,7 +62,13 @@ print('P1=',P1)
 # Pressure ratio
 print('P2/P1=',P2/P1)
 
-# Isentropic Mach Number (Mass average)
+# Exit Isentropic Mach Number (Mass average)
+gcoeff = 2.0 / (params['gamma'] - 1) 
+gpow = (params['gamma'] - 1) / params['gamma']
+Ma1 = np.sqrt(((P1/P1_s)**(gpow) - 1) * gcoeff)
+print('Ma1=', Ma1)
+
+# Exit Isentropic Mach Number (Mass average)
 gcoeff = 2.0 / (params['gamma'] - 1) 
 gpow = (params['gamma'] - 1) / params['gamma']
 Ma2is = np.sqrt(((P1/P2)**(gpow) - 1) * gcoeff)
