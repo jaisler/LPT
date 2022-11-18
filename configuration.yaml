@@ -2,7 +2,7 @@
 # All paths are to be given without final slash.
 
 # Path 
-path0: '/Users/isler/imperial/RR/t106a/sims/Re48000/simFine_15_25/vis/post'
+path0: '/Users/isler/imperial/RR/t106a/sims/Re44540/simFine_10_20/vis/post'
 pathExp: '/Users/isler/imperial/RR/t106a/exp'
 
 # File
@@ -22,7 +22,7 @@ Py: 0.799
 # Axial chord
 Cax: 0.859
 # Dynamic viscosity
-mu: 2.08333e-5
+mu: 2.24517e-5
 # pinf
 pInf: 12.0965 # Pa
 # rhoInf
