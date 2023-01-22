@@ -42,35 +42,6 @@ class Data:
         for i in range(self.npoints):
             fileHandle.write(str(self.x[fileNumber][i]) + ',' + str(self.wss[fileNumber][i]) + '\n')
 
-class DataInlet:
-    def __init__(self, params):
-        """ Initialisation of the data from .csv files. 
-            The data in the file is related to the inlet
-            measurements. It was taken at -0.5Cax from
-            the leading edge """
-
-        df = []
-        for i in range(params['nfiles']):
-            df.append(pd.read_csv(params['path0'] + '/' 
-                + params['fileI'] + '.csv', delimiter=','))
-            
-        self.y = [] 
-        self.p = []
-        self.rho = []
-        self.u = []
-        self.v = []
-        self.npoints = []
-        for i in range(params['nfiles']):
-            self.x.append(df[i]['x'])
-            self.cp.append(df[i]['cp'])
-            self.npoints.append(len(df[i]['x']))
-
-    def GetNpoints(self):
-        return self.npoints
-
-    def GetX(self):       
-        return self.x
-
 class DataSlice:
     def __init__(self, params, loc):
         """ Initialisation of the data from .csv files. 
@@ -82,11 +53,11 @@ class DataSlice:
         df = []
         if loc == 'exit': 
             for i in range(params['nfiles']):
-                df.append(pd.read_csv(params['path0'] + '/' 
+                df.append(pd.read_csv(params['path'+str(i)] + '/' 
                     + params['fileO'] + '.csv', delimiter=','))
         else:
             for i in range(params['nfiles']):
-                df.append(pd.read_csv(params['path0'] + '/' 
+                df.append(pd.read_csv(params['path'+str(i)] + '/' 
                     + params['fileI'] + '.csv', delimiter=','))
 
         self.y = [] 
@@ -103,8 +74,8 @@ class DataSlice:
             self.u.append(df[i]['u'])
             self.v.append(df[i]['v'])
             self.npoints.append(len(df[i]['y']))
-
-        fc.bubble_sort(self.y, self.rho, self.p, self.u, self.v)
+            fc.bubble_sort(self.y[i], self.rho[i], self.p[i], 
+                           self.u[i], self.v[i])
 
     def GetNpoints(self):
         return self.npoints

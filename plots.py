@@ -8,14 +8,15 @@ def plot_cp(x, cp, xe, cpe):
     fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    p1, = plt.plot(xe[0], cpe[0], 'bo', color='w', 
-    markeredgecolor='b', markersize=9)	
-    p0, = plt.plot(x[0], cp[0], 'r', color='r', linewidth=3)	
-    #p2, = plt.plot(x, cp94, '--', color='b', linewidth=4)	
-    #p3, = plt.plot(x, cp93, ':', color='m', linewidth=4)	
-    #p4, = plt.plot(dwe['x'], dwe['cp'], 'bo', color='k', mfc='b')	
-
-    plt.legend([p0, p1],[r'Nektar++', r'Experiment'],
+    p2, = plt.plot(xe[0], cpe[0], 'o', color='w', 
+    markeredgecolor='k', markersize=11)	
+    p0, = plt.plot(x[0], cp[0], '-', color='r', linewidth=3)	
+    p1, = plt.plot(x[1], cp[1], '--', color='b', linewidth=3)	
+    
+    plt.legend([p0, p1, p2],
+    [r'Nektar++: Stagnation Inflow bc',
+    r'Nektar++: Enforce SU bc', 
+    r'Experiment'],
     loc='best')
     
     plt.tick_params(reset=True, direction="in", which='both')

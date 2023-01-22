@@ -35,6 +35,7 @@ for i in range(params['nfiles']):
     rhobar = fc.mixed_out_average_quantity(ye[i], rhoe[i], params['Py']) # density
 Re2 = (rhobar*params['C']*uM)/params['mu']
 print('Re2=', Re2)
+print('ubar=', ubar)
 
 # Exit Mach number
 for i in range(params['nfiles']):
@@ -62,11 +63,11 @@ print('P1=',P1)
 # Pressure ratio
 print('P2/P1=',P2/P1)
 
-# Exit Isentropic Mach Number (Mass average)
+# Inlet Isentropic Mach Number (Mass average)
 gcoeff = 2.0 / (params['gamma'] - 1) 
 gpow = (params['gamma'] - 1) / params['gamma']
-Ma1 = np.sqrt(((P1/P1_s)**(gpow) - 1) * gcoeff)
-print('Ma1=', Ma1)
+Ma1is = np.sqrt(((P1/P1_s)**(gpow) - 1) * gcoeff)
+print('Ma1is=', Ma1is)
 
 # Exit Isentropic Mach Number (Mass average)
 gcoeff = 2.0 / (params['gamma'] - 1) 

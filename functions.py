@@ -48,9 +48,12 @@ def mass_flow_average_quantity(y, u, qt):
     """ Mass average quantity """
     num = 0
     den = 0
-    for i in range(1, int(len(y)/2)): #Simpson's 1/3 Rule
-        num = num + ((qt[2*i-2]*u[2*i-2]+4*qt[2*i-1]*u[2*i-1]+qt[2*i]*u[2*i])*(y[2*i-2]-y[2*i]))/6.0
-        den = den + ((u[2*i-2]+4*u[2*i-1]+u[2*i])*(y[2*i-2]-y[2*i]))/6.0
+    #for i in range(1, int(len(y)/2)): #Simpson's 1/3 Rule
+    for i in range(len(y)-1):
+        #num = num + ((qt[2*i-2]*u[2*i-2]+4*qt[2*i-1]*u[2*i-1]+qt[2*i]*u[2*i])*(y[2*i-2]-y[2*i]))/6.0
+        #den = den + ((u[2*i-2]+4*u[2*i-1]+u[2*i])*(y[2*i-2]-y[2*i]))/6.0
+        num += ((qt[i+1]*u[i+1]+qt[i]*u[i])*(y[i+1]-y[i]))/2.0
+        den += ((u[i+1]+u[i])*(y[i+1]-y[i]))/2.0
     return(num/den)
 
 def mixed_out_average_quantity(y, qt, pitch):
@@ -67,6 +70,6 @@ def cp_distribution(p, P1, P2, npoints, params):
     for j in range(params['nfiles']):
         cp.append([])
         for i in range(npoints[j]):
-            cp[j].append((p[j][i]-P2)/(P1-P2))
+            cp[j].append((p[j][i]-P2[j])/(P1[j]-P2[j]))
     return (cp)
 
