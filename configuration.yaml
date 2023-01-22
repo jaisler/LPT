@@ -2,7 +2,8 @@
 # All paths are to be given without final slash.
 
 # Path 
-path0: '/Users/isler/imperial/RR/t106a/sims/Re44540/simFine_10_20/vis/post'
+path0: '/Users/isler/imperial/RR/t106a/sims461/Re45000Adp/simFine_15_25/vis/post'
+#path1: '/Users/isler/imperial/RR/t106a/sims461/Re45000Adp/simFine_15_25/vis/post'
 pathExp: '/Users/isler/imperial/RR/t106a/exp'
 
 # File
@@ -22,15 +23,10 @@ Py: 0.799
 # Axial chord
 Cax: 0.859
 # Dynamic viscosity
-mu: 2.24517e-5
+mu: [2.22222e-5, 2.22222e-5]
 # pinf
 pInf: 12.0965 # Pa
 # rhoInf
 rhoInf: 1.0 # Kg/m3
 # Gas constant
 R: 12.0965
-
-# Mach number
-#Ma1: 0.0310701406
-# Reynold number
-#Re1: 58581
