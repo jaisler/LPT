@@ -2,8 +2,8 @@
 # All paths are to be given without final slash.
 
 # Path 
-path0: '/Users/isler/imperial/RR/t106a/sims461/Re45000Adp/simFine_15_25/vis/post'
-#path1: '/Users/isler/imperial/RR/t106a/sims461/Re45000Adp/simFine_15_25/vis/post'
+path0: '/Users/isler/imperial/RR/t106a/sims461/Re45000AdpSI/simFine_15_25/vis/post'
+path1: '/Users/isler/imperial/RR/t106a/sims461/Re45000Adp/simFine_15_25/vis/post'
 pathExp: '/Users/isler/imperial/RR/t106a/exp'
 
 # File
@@ -11,7 +11,7 @@ fileF: 'wallAvgWSS'
 fileE: 'expT106A'
 fileI: 'inlet'
 fileO: 'exit'
-nfiles: 1 # how many compressible flow folders we have?
+nfiles: 2 # how many compressible flow folders we have?
 
 #Non-dimensional parameters
 #gamma
@@ -28,5 +28,7 @@ mu: [2.22222e-5, 2.22222e-5]
 pInf: 12.0965 # Pa
 # rhoInf
 rhoInf: 1.0 # Kg/m3
+# Reference velocity
+uInf: 1.0
 # Gas constant
 R: 12.0965
