@@ -31,6 +31,12 @@ class Data:
 
     def GetNpoints(self):
         return self.npoints
+    
+    def GetCf(self, params):
+        cf = []
+        for i in range(params['nfiles']):
+            cf.append(self.wss[i]/(0.5*params['rhoInf']*params['uInf']**2))
+        return cf
 
     def WritePressureToCSV(self, fileNumber, fileHandle):
         fileHandle.write('x, p' + '\n')

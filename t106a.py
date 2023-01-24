@@ -91,7 +91,7 @@ objExp = DataExp(params) # Experimental data
 # Cp distribution
 p = objField.GetP()
 npoints = objField.GetNpoints()
-cp = fc.cp_distribution(p, P1, P2, npoints, params)
+cp = fc.pressure_coefficient(p, P1, P2, npoints, params)
 
 # Axial chord
 x = objField.GetX()
@@ -106,6 +106,8 @@ pl.plot_cp(x/cax, cp, xexp, cpexp, params['path0'])
 
 # X-shear stress 
 wss = objField.GetWSS()
+# Skin friction: Implementation from Garai et al. 2015
+cf = fc.skin_friction_coefficiet(wss, P1, P2, params) 
 
 # Plot x-shear stress
-pl.plot_shear(x/cax, wss, params['path0'])
+pl.plot_cf(x/cax, cf, params['path0'])

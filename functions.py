@@ -64,7 +64,7 @@ def mixed_out_average_quantity(y, qt, pitch):
     qtbar = qtbar/pitch
     return(qtbar)
 
-def cp_distribution(p, P1, P2, npoints, params):
+def pressure_coefficient(p, P1, P2, npoints, params):
     """ Calculate the pressure distribution on a blade """
     cp = []
     for j in range(params['nfiles']):
@@ -73,3 +73,9 @@ def cp_distribution(p, P1, P2, npoints, params):
             cp[j].append((p[j][i]-P2[j])/(P1[j]-P2[j]))
     return (cp)
 
+def skin_friction_coefficiet(wss, P1, P2, params):
+    """ Calculate the skin friction coefficient on a blade"""
+    cf = []
+    for i in range(params['nfiles']):
+        cf.append(wss[i]/(P1[i]-P2[i]))
+    return cf

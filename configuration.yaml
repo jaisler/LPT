@@ -28,5 +28,7 @@ mu: [2.22222e-5, 2.22222e-5]
 pInf: 12.0965 # Pa
 # rhoInf
 rhoInf: 1.0 # Kg/m3
+# Reference velocity
+uInf: 1.0
 # Gas constant
 R: 12.0965
