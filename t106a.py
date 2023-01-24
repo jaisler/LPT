@@ -18,32 +18,34 @@ ve = objExit.GetV()
 pe = objExit.GetP()
 rhoe = objExit.GetRho()
 # Exit pressure
+P2 = []
 for i in range(params['nfiles']):
-    P2 = fc.mass_flow_average_quantity(ye[i], ue[i], pe[i])
-print('P2=',P2)
+    P2.append(fc.mass_flow_average_quantity(ye[i], ue[i], pe[i]))
 
 # Exit angle
+alphaM = []
+uM = []
 for i in range(params['nfiles']):
     ubar = fc.mixed_out_average_quantity(ye[i], ue[i], params['Py']) # streamwise velocity
     vbar = fc.mixed_out_average_quantity(ye[i], ve[i], params['Py']) # normal velocity
-alphaM = np.arctan(vbar/ubar)
-uM = np.sqrt(ubar*ubar+vbar*vbar)
-print('alphaM=', alphaM*180/np.pi)
+    alphaM.append(np.arctan(vbar/ubar))
+    uM.append(np.sqrt(ubar*ubar+vbar*vbar))
+    print(ubar)
 
 # Exit Reynolds number
+Re2 = []
+rhobar = []
 for i in range(params['nfiles']):
-    rhobar = fc.mixed_out_average_quantity(ye[i], rhoe[i], params['Py']) # density
-Re2 = (rhobar*params['C']*uM)/params['mu']
-print('Re2=', Re2)
-print('ubar=', ubar)
+    rhobar.append(fc.mixed_out_average_quantity(ye[i], rhoe[i], params['Py'])) # density
+    Re2.append((rhobar[i]*params['C']*uM[i])/params['mu'][i])
 
 # Exit Mach number
+Ma2 = []
 for i in range(params['nfiles']):
     pbar = fc.mixed_out_average_quantity(ye[i], pe[i], params['Py']) # pressure
-Tbar = pbar/(params['R']*rhobar)
-cbar = np.sqrt(params['gamma']*params['R']*Tbar)
-Ma2 = uM/cbar
-print('Ma2=', Ma2)
+    Tbar = pbar/(params['R']*rhobar[i])
+    cbar = np.sqrt(params['gamma']*params['R']*Tbar)
+    Ma2.append(uM/cbar)
 
 ### Inlet ###
 objInlet = DataSlice(params, 'inlet')
@@ -52,33 +54,39 @@ ui = objInlet.GetU()
 rhoi = objInlet.GetRho()
 vi = objInlet.GetV()
 pi = objInlet.GetP()
+P1_s = []
+P1 = []
 for i in range(params['nfiles']):
-    P1_s = fc.mass_flow_average_quantity(yi[i], ui[i], pi[i]) # Static pressure
+    P1_s.append(fc.mass_flow_average_quantity(yi[i], ui[i], pi[i])) # Static pressure
     rhoA = fc.mass_flow_average_quantity(yi[i], ui[i], rhoi[i]) # density
     uA = fc.mass_flow_average_quantity(yi[i], ui[i], ui[i]) # streamwise velocity
     vA = fc.mass_flow_average_quantity(yi[i], ui[i], vi[i]) # normal velocity
-P1 = P1_s + 0.5*rhoA*(uA*uA + vA*vA) 
-print('P1=',P1)
-
-# Pressure ratio
-print('P2/P1=',P2/P1)
+    P1.append(P1_s[i] + 0.5*rhoA*(uA*uA + vA*vA))
 
 # Inlet Isentropic Mach Number (Mass average)
-gcoeff = 2.0 / (params['gamma'] - 1) 
-gpow = (params['gamma'] - 1) / params['gamma']
-Ma1is = np.sqrt(((P1/P1_s)**(gpow) - 1) * gcoeff)
-print('Ma1is=', Ma1is)
-
 # Exit Isentropic Mach Number (Mass average)
 gcoeff = 2.0 / (params['gamma'] - 1) 
 gpow = (params['gamma'] - 1) / params['gamma']
-Ma2is = np.sqrt(((P1/P2)**(gpow) - 1) * gcoeff)
-print('Ma2is=', Ma2is)
+Ma1is = []
+Ma2is = []
+for i in range(params['nfiles']):
+    Ma1is.append(np.sqrt(((P1[i]/P1_s[i])**(gpow) - 1) * gcoeff))
+    Ma2is.append(np.sqrt(((P1[i]/P2[i])**(gpow) - 1) * gcoeff))
+ 
+ # Print data
+for i in range(params['nfiles']):
+    print('File'+str(i)+':')
+    print('P2/P1=',P2[i]/P1[i])
+    print('alphaM=', alphaM[i]*180/np.pi)
+    print('Ma1is=', Ma1is[i])
+    print('Ma2is=', Ma2is[i])
+    print('Re2=', Re2[i])
+    print('\n')
 
-### Blade ###
+### Blade ### 
 # Initalisation: Data from .csv (wall)
 objField = Data(params) # Class object
-objExp = DataExp(params)
+objExp = DataExp(params) # Experimental data
 
 # Cp distribution
 p = objField.GetP()
@@ -94,4 +102,10 @@ xexp = objExp.GetX()
 cpexp = objExp.GetCP()
 
 # Plot Cp distribution
-pl.plot_cp(x/cax, cp, xexp, cpexp) 
+pl.plot_cp(x/cax, cp, xexp, cpexp, params['path0']) 
+
+# X-shear stress 
+wss = objField.GetWSS()
+
+# Plot x-shear stress
+pl.plot_shear(x/cax, wss, params['path0'])
