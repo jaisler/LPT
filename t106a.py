@@ -30,7 +30,6 @@ for i in range(params['nfiles']):
     vbar = fc.mixed_out_average_quantity(ye[i], ve[i], params['Py']) # normal velocity
     alphaM.append(np.arctan(vbar/ubar))
     uM.append(np.sqrt(ubar*ubar+vbar*vbar))
-    print(ubar)
 
 # Exit Reynolds number
 Re2 = []
