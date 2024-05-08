@@ -1,6 +1,8 @@
 import math
+import numpy as np
+from scipy import signal
 
-def bubble_sort(y, qt1, qt2, qt3, qt4):
+def bubble_sort(y, qt1, qt2, qt3, qt4, qt5):
     "Bubble sort algorithm"
     has_swapped = True
     num_of_iterations = 0
@@ -11,6 +13,7 @@ def bubble_sort(y, qt1, qt2, qt3, qt4):
     qt2r = qt2[::-1]
     qt3r = qt3[::-1]
     qt4r = qt4[::-1]
+    qt5r = qt5[::-1]
 
     while(has_swapped):
         has_swapped = False
@@ -22,9 +25,10 @@ def bubble_sort(y, qt1, qt2, qt3, qt4):
                 qt2r[i], qt2r[i+1] = qt2r[i+1], qt2r[i]
                 qt3r[i], qt3r[i+1] = qt3r[i+1], qt3r[i]
                 qt4r[i], qt4r[i+1] = qt4r[i+1], qt4r[i]
+                qt5r[i], qt5r[i+1] = qt5r[i+1], qt5r[i]
                 has_swapped = True
         num_of_iterations += 1
-    return(yr, qt1r, qt2r, qt3r, qt4r)
+    return(yr, qt1r, qt2r, qt3r, qt4r, qt5r)
 
 def axial_chord(x):
     """ Obtain the axial chord of the blade """
@@ -70,12 +74,194 @@ def pressure_coefficient(p, P1, P2, npoints, params):
     for j in range(params['nfiles']):
         cp.append([])
         for i in range(npoints[j]):
-            cp[j].append((p[j][i]-P2[j])/(P1[j]-P2[j]))
+            cp[j].append((p[j][i]-(P2[j]+0.004))/(P1[j]-(P2[j]+0.004))) #P2+0.004
     return (cp)
 
-def skin_friction_coefficiet(wss, P1, P2, params):
+def skin_friction_coefficiet(x, wss, P1, P2, params):
     """ Calculate the skin friction coefficient on a blade"""
     cf = []
     for i in range(params['nfiles']):
-        cf.append(wss[i]/(P1[i]-P2[i]))
+        cf.append([])
+        flag1 = True
+        flag2 = False
+        sign = 1
+        #print(x[i])
+        for j in range(len(wss[i]) - 1):
+            if x[i][j] > x[i][j+1] and flag1:
+                sign *= -1 
+                flag1 = False
+                flag2 = True
+            elif x[i][j] < 0 and flag2:
+                sign *= -1 
+                flag2 = False
+            cf[i].append(sign * wss[i][j]/(P1[i]-P2[i])) # sign
+        cf[i].append((sign * wss[i][len(x[i])-1])/(P1[i]-P2[i]))
+
     return cf
+
+def wake_loss(p, rhoe, ue, ve, we, uM, P1, P2, npoints, params):
+    """ Calculate the wake loss for the blade """
+    loss = []
+    for j in range(params['nfiles']):
+        loss.append([])
+        for i in range(params['spline']):
+            mod2 = 0.5 * rhoe[j][i] * (ue[j][i] * ue[j][i] + ve[j][i] * ve[j][i] + 
+                                       we[j][i] * we[j][i])
+            loss[j].append((P1[j] - 0.052 - (p[j][i] + mod2))/(0.5 * rhoe[j][i] * uM[j] * uM[j]))
+
+    return (loss)
+
+def wake_loss_shift(loss, y, params):
+    """ Calculate shift in the wake loss """
+
+    shift = []
+    shift.append(196)
+    shift.append(196)
+    shift.append(196)
+    lossShift = []
+    yeShift = []
+    for j in range(params['nfiles']):
+        lossShift.append(np.zeros(len(loss[j])))
+        value = y[j][shift[j]] 
+        k = shift[j]
+        yeShift.append(np.zeros(len(loss[j])))
+        for i in range(len(loss[j])):
+            lossShift[j][i] = loss[j][k]
+            yeShift[j][i] = y[j][k] - value
+            if (k == (len(loss[j]) - 1)):
+                k = 0
+                shift[j] = len(loss[j]) - shift[j] 
+                value = - y[j][shift[j]] #+ add[j]
+            else:
+                k += 1
+    
+    return (lossShift, yeShift)
+
+def wake_loss_flip(loss, y, params):
+    """ Flip data of the wake loss """
+
+    lossFlip = []
+    yFlip = []
+    for j in range(params['nfiles']):
+        k = len(loss[j])
+        lossFlip.append([])
+        yFlip.append([])
+        for i in range(k):
+            if i == 0:
+                yFlip[j].append(y[j][k-i-1])
+            else:
+                yFlip[j].append(yFlip[j][i-1] - abs(y[j][i]-y[j][i-1]))
+
+    return (loss, yFlip)
+
+def wake_loss_position(y, ymin, Py, params):
+    """ Calculate the wake loss position """
+    ystar = []
+    for j in range(params['nfiles']):
+        ystar.append((y[j] + ymin) / Py)
+    return (ystar)
+
+
+def CalculatePSD(u, dt, params):
+    """ Calculate PSD """
+    # f contains the frequency components
+    # S is the PSD
+    pf = []
+    pS = []
+    fs = []
+    #print(math.ceil(params['nfiles']/2))
+    # Obtain the time step for each file and adjust parameters
+    for i in range(params['nfilepsd']):
+        dt[i] *= params['C']/params['Uinf']
+        fs.append(int(1/dt[i]))
+        u[i] *= params['Uinf']
+
+    # Calculare PSD
+    nameWin = 'hanning'
+    for i in range(params['nfilepsd']):
+        nx = int(len(u[i])/3)  # /6 number of windows - 3 or 6
+        (f, S) = signal.welch(u[i], fs[i], scaling='density', 
+                                    window=signal.get_window(nameWin, nx),
+                                    nperseg=nx, noverlap=round(nx/2))
+        pf.append(f)
+        pS.append(10.0*np.log10(S)) #  
+        del f, S
+    return (pf, pS)
+
+def CalculateTwoPointsCorrelation(u, params):
+    """ Calculate two-points correlation function """
+
+    # denominator - RMS
+    k = 0
+    tn = 0
+    den = 0
+    while (k < len(u)):
+        meanz = 0
+        for i in range(params['npcorr']): 
+            meanz += u[i + k] * u[i + k]
+        meanz /= (params['npcorr'])
+        den += meanz
+        k += params['npcorr']
+        tn += 1
+    den /= tn
+
+    # numerator
+    Rii = np.zeros(params['npcorr']) # correlation
+    for l in range(params['npcorr']):
+        k = 0
+        tn = 0
+        while (k < len(u)): # time
+            for i in range(params['npcorr']): # space
+                if ((i + l) < params['npcorr']):
+                    Rii[l] += u[i + k] * u[i + l + k] 
+                else:
+                    Rii[l] += u[i + k] * u[i + l + 2 * (params['npcorr'] - 1 - i - l) + k]
+            k += params['npcorr']
+            tn += 1
+        Rii[l] /= tn
+        Rii[l] /= (params['npcorr'] * den) 
+
+    return Rii
+
+def wall_units(x, wss, rho, params):
+    """ Calculate wall units """
+    wallx = []
+    wally = []
+    wallz = []
+    spc = []
+    shear = []
+    den = []
+    kinvis = []
+    xi = 573 # by hand
+    xf = 147 # by hand
+    for i in range(params['nfiles']):
+        spc.append([])
+        shear.append([])
+        kinvis.append([])
+        den.append([])
+        for j in range(xi, len(x[i])):
+            spc[i].append(x[i][j])
+            shear[i].append(wss[i][j])
+            den[i].append(rho[i][j])
+            kinvis[i].append(params['mu'][0]/rho[i][j])
+        for j in range(xf):
+            spc[i].append(x[i][j])
+            shear[i].append(wss[i][j])
+            den[i].append(rho[i][j])
+            kinvis[i].append(params['mu'][0]/rho[i][j])
+    
+    # Calculation of kinvis with rhoInf
+    kinvisStat = 1 # params['rhoInf'] / params['mu'][0]
+
+    for i in range(params['nfiles']):
+        wallx.append([])
+        wally.append([])
+        wallz.append([])
+        for j in range(len(spc[0]) - 1):
+            dx = spc[i][j+1] - spc[i][j]
+            wallx[i].append(dx * np.sqrt(abs(shear[i][j])/rho[i][j]) / kinvis[i][j])
+            wally[i].append((params['dyplus'] * np.sqrt(abs(shear[i][j])/rho[i][j])) / kinvis[i][j])
+            wallz[i].append((params['dzplus'] * np.sqrt(abs(shear[i][j])/rho[i][j])) / kinvis[i][j])
+        spc[i].pop()
+
+    return (spc, wallx, wally, wallz)

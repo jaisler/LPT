@@ -2,28 +2,65 @@
 # All paths are to be given without final slash.
 
 # Path 
-path0: '/Users/isler/imperial/RR/t106a/sims461/Re45000AdpSI/simFine_15_25/vis/post'
-path1: '/Users/isler/imperial/RR/t106a/sims461/Re45000Adp/simFine_15_25/vis/post'
-pathExp: '/Users/isler/imperial/RR/t106a/exp'
+path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
+path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgTIM6Forc32/post' 
+#path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgTIM6Forc/post' 
+pathExp: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
+pathExpLoss: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
+nfiles: 2 # how many compressible flow folders we have?
+nfilesCp: 3
+nfilesLoss: 6
 
 # File
-fileF: 'wallAvgWSS'
-fileE: 'expT106A'
+fileF: 'wallAvg'
+fileB: 'blade'
+fileE: 'expCp'
+fileEL: 'expLoss'
 fileI: 'inlet'
 fileO: 'exit'
-nfiles: 2 # how many compressible flow folders we have?
+filehist: 'hpoint'
+
+# Routines
+routine:
+  phisical: True
+  correlation: False
+  psd: False
+
+# blade
+nfileBlade: 16
+
+# exit 
+nfileExit: 16
+
+# inlet
+nfileInlet: 16
+
+# Spline data
+spline: 606
+
+# PSD data
+nfilepsd: 13 # number of psd files 
+psdloc: 16 # location in the .his file (data)
+psdNpoints: 16 # number of points in the psd file
+
+# Correlation data
+nfilecorr: 2 # number of correlation files 
+npcorr: 16 # number of points in z-direction
 
 #Non-dimensional parameters
+spacedim: 3 
 #gamma
 gamma: 1.4
 # Chord
 C: 1 
+# U inf
+Uinf: 1
 # Picth
 Py: 0.799
 # Axial chord
 Cax: 0.859
 # Dynamic viscosity
-mu: [2.22222e-5, 2.22222e-5]
+mu: [2.71003e-05,2.71003e-05,2.71003e-05] #2.69906e-05 #2.68456e-05, 2.72109e-05   
 # pinf
 pInf: 12.0965 # Pa
 # rhoInf
@@ -32,3 +69,10 @@ rhoInf: 1.0 # Kg/m3
 uInf: 1.0
 # Gas constant
 R: 12.0965
+# ymin
+ymin: 1.79131
+# Lz
+Lz: 0.1
+# At P=3
+dzplus: 0.0027777776666666667 #0.0083333333
+dyplus: 3.236666666666667e-05 #0.971e-4
