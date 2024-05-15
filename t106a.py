@@ -175,12 +175,18 @@ if (params['routine']['phisical']):
     # Plot Cp distribution
     pl.plot_cp(x/cax, cp, xexp, cpexp, params['path0']) 
 
+
+    objExpCf = DataExpCf(params) # Experimental data
+    # Get experimental data
+    xexp = objExpCf.GetX()
+    cfexp = objExpCf.GetCF()
+    
     # X-shear stress 
     wss = objField.GetWSS()
     # Skin friction: Implementation from Garai et al. 2015
     cf = fc.skin_friction_coefficiet(x, wss, P1, P2, params) 
     # Plot x-shear stress
-    pl.plot_cf(x/cax, cf, params['path0'])
+    pl.plot_cf(x/cax, cf, xexp, cfexp, params['path0'])
 
     # rho density
     rho = objField.GetRho()
