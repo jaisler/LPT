@@ -82,20 +82,19 @@ def plot_cp(x, cp, xe, cpe, path):
     plt.rc('legend',**{'fontsize':12})
 
     p0, = plt.plot(xe[0], cpe[0], 'o', color='none', markeredgecolor='k', markersize=13)	
-    p1, = plt.plot(xe[1], cpe[1], ':', color='g', linewidth=2)	
+    p1, = plt.plot(xe[1], cpe[1], ':', color='gold', linewidth=2)	
     p2, = plt.plot(xe[2], cpe[2], '--', color='b', linewidth=2)	
-    p3, = plt.plot(x[0], cp[0], '-', color='red', linewidth=2)	
-    p4, = plt.plot(x[1], cp[1], '-', color='darkorange', linewidth=2)	
-    #p5, = plt.plot(x[2], cp[2], '-', color='darkorange', linewidth=2)	
+    p3, = plt.plot(xe[3], cpe[3], '--', color='purple', linewidth=2)	
+    p4, = plt.plot(x[0], cp[0], '-', color='red', linewidth=2)	
+    p5, = plt.plot(x[1], cp[1], '-', color='darkorange', linewidth=2)	
 
-    plt.legend([p0, p1, p2, p3, p4], #, p5],
-    #[r'Nektar++: Stagnation Inflow bc',
+    plt.legend([p0, p1, p2, p3, p4, p5],
     [r'Experiment, 0\% Tu', 
      r'Wissink et al. 2003, 0\% Tu',
-     r'Michelassi et al. 2014, 0\% Tu',
+     r'Michelassi et al. 2014, 0.0\% Tu',
+     r'Michelassi et al. 2014, 3.2\% Tu',
      r'Present, 0\% Tu',
      r'Present, 3.2\% Tu'],
-     #r'Present, 7.8\% Tu'],
     loc='center')
     
     plt.tick_params(reset=True, direction="in", which='both')
@@ -111,7 +110,7 @@ def plot_cp(x, cp, xe, cpe, path):
     plt.savefig(path + '/cp.png', format='png')
     plt.show()
 
-def plot_cf(x, sh, path):
+def plot_cf(x, sh, xe, she, path):
     # Figure - Cp distribution
     plt.figure()
     plt.rc('legend',**{'fontsize':15})
@@ -121,13 +120,13 @@ def plot_cf(x, sh, path):
     b = [0, 0]
     plt.plot(a, b, ':', color='k')
 
+    #p0, = plt.plot(xe[0], she[0], '--', color='purple', linewidth=2)	
     p0, = plt.plot(x[0], sh[0], '-', color='red', linewidth=2)	
     p1, = plt.plot(x[1], sh[1], '-', color='darkorange', linewidth=2)	
-    #p2, = plt.plot(x[2], sh[2], '-', color='darkorange', linewidth=2)	
-
 
     plt.legend([p0, p1],
     #[r'Nektar++: Stagnation Inflow bc',
+    #[r'Michelassi et al. 2014, 3.2\% Tu',
     [r'Present, 0\% Tu',
     r'Present, 3.2\% Tu'],
     #r'Present, 7.8\% Tu'],
