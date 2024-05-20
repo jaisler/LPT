@@ -243,6 +243,36 @@ class DataPSD:
 
     def GetDt(self):
         return self.dt
+class DataPSDUpstream:
+    def __init__(self, params):
+        """ Extract data from a .csv file 
+            to calculate the Power Density Spectra """
+
+        self.u = [] 
+        self.t = []
+        self.dt = []
+        df = []
+        for i in range(params['nfilepsdUp']):
+            df.append(pd.read_csv(params['path'] + '/'
+                + params['filePSDUp'] + str(i) + '.csv',
+                delimiter=',',
+                skiprows=[j for j in range(1, params['psdlocUp'])]))
+
+            # Obtain data in each psdNpoints rows
+            df[i] = df[i].iloc[::params['psdNpointsUp'], :]
+
+            self.u.append(df[i]['rhou']/df[i]['rho'])
+            self.t.append(df[i]['t'])
+            self.dt.append(df[i]['t'][params['psdNpointsUp']] - df[i]['t'][0])
+
+    def GetU(self):
+        return self.u
+
+    def GetT(self):
+        return self.t
+
+    def GetDt(self):
+        return self.dt
 
 class DataSpatialCorrelation:
     def __init__(self, params):

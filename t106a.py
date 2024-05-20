@@ -10,12 +10,23 @@ with open(r'configuration.yaml') as file:
     # scalar values to Python the dictionary format
     params = yaml.load(file, Loader=yaml.FullLoader)
 
-
 if (params['routine']['psd']):
+    objPSDUp = DataPSDUpstream(params)
+    dt = objPSDUp.GetDt()
+    u = objPSDUp.GetU()
+    (fu, Su) = fc.CalculatePSD(u, dt, params, flag='up')
+    for i in range(len(fu)):
+        for j in range(len(fu[i])):
+            fu[i][j] = fu[i][j] * (params['C'] / params['Uinf'])
+            Su[i][j] = Su[i][j] / (params['Uinf']**2)
+    pl.plot_psd_velocity_upstream(fu, Su, params)  
+    # delete object  
+    del objPSDUp
+
     objPSD = DataPSD(params)
     dt = objPSD.GetDt()
     u = objPSD.GetU()
-    (fu, Su) = fc.CalculatePSD(u, dt, params)
+    (fu, Su) = fc.CalculatePSD(u, dt, params, flag='down')
     for i in range(len(fu)):
         for j in range(len(fu[i])):
             fu[i][j] = fu[i][j] * (params['C'] / params['Uinf'])
@@ -212,4 +223,3 @@ if (params['routine']['phisical']):
 
     # Plot wake loss
     pl.plot_wake_loss(ystarFlip, lossFlip, xexp, lossexp, params['path0'])
-
