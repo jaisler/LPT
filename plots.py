@@ -47,6 +47,44 @@ def plot_psd_velocity(f,S,params):
     fig.savefig(params['path'] + '/psdu.png', format='png')
     plt.show()
 
+def plot_psd_velocity_upstream(f,S,params):
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
+    plt.rc('legend',**{'fontsize':14})
+
+    npsd = params['nfilepsdUp']
+
+    p0, = plt.semilogx(f[npsd-3], S[npsd-3], '-', color='darkorange', linewidth=3)	
+    p1, = plt.semilogx(f[npsd-2], S[npsd-2], '-', color='red', linewidth=3)	
+    p2, = plt.semilogx(f[npsd-1], S[npsd-1], '-', color='darkred', linewidth=3)	
+
+    # -5/3 power law
+    x0=0.3e1
+    x1=2e2
+    x = np.linspace(x0, x1)
+    y = -(5/3)*10*np.log10(x) - (5/3)*10*np.log10(200) 
+    p3, = plt.semilogx(x, y, '--', color='k')
+
+    plt.legend([p0,p1,p2,p3],
+    [r'$-0.3C$',
+     r'$-0.2C$',
+     r'$-0.1C$',
+     r'$f^{-5/3}$'],
+    loc='best')
+
+    plt.tick_params(reset=True, direction="in", which='both')
+    plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='major')
+    plt.subplots_adjust(left=0.152, right=0.96, bottom=0.135, top=0.96)
+    plt.xlim((1e0,500)) # 0.7,1000
+    plt.ylim((-150, 10)) # -220, 20
+    plt.xticks(fontsize = 20)
+    plt.yticks(fontsize = 20)
+    plt.xlabel(r'$f C / U_{\infty}$',fontsize = 18)
+    plt.ylabel(r'$PSD(u)$ $[dB]$',fontsize = 18)
+    fig.savefig(params['path'] + '/psdu.pdf', format='PDF')
+    fig.savefig(params['path'] + '/psdu.png', format='png')
+    plt.show()
+
 def plot_tpcorr(z, R, path):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
@@ -82,20 +120,19 @@ def plot_cp(x, cp, xe, cpe, path):
     plt.rc('legend',**{'fontsize':12})
 
     p0, = plt.plot(xe[0], cpe[0], 'o', color='none', markeredgecolor='k', markersize=13)	
-    p1, = plt.plot(xe[1], cpe[1], ':', color='g', linewidth=2)	
+    p1, = plt.plot(xe[1], cpe[1], ':', color='gold', linewidth=2)	
     p2, = plt.plot(xe[2], cpe[2], '--', color='b', linewidth=2)	
-    p3, = plt.plot(x[0], cp[0], '-', color='red', linewidth=2)	
-    p4, = plt.plot(x[1], cp[1], '-', color='darkorange', linewidth=2)	
-    #p5, = plt.plot(x[2], cp[2], '-', color='darkorange', linewidth=2)	
+    p3, = plt.plot(xe[3], cpe[3], '--', color='purple', linewidth=2)	
+    p4, = plt.plot(x[0], cp[0], '-', color='red', linewidth=2)	
+    p5, = plt.plot(x[1], cp[1], '-', color='darkorange', linewidth=2)	
 
-    plt.legend([p0, p1, p2, p3, p4], #, p5],
-    #[r'Nektar++: Stagnation Inflow bc',
+    plt.legend([p0, p1, p2, p3, p4, p5],
     [r'Experiment, 0\% Tu', 
      r'Wissink et al. 2003, 0\% Tu',
-     r'Michelassi et al. 2014, 0\% Tu',
+     r'Michelassi et al. 2014, 0.0\% Tu',
+     r'Michelassi et al. 2014, 3.2\% Tu',
      r'Present, 0\% Tu',
      r'Present, 3.2\% Tu'],
-     #r'Present, 7.8\% Tu'],
     loc='center')
     
     plt.tick_params(reset=True, direction="in", which='both')
@@ -111,7 +148,7 @@ def plot_cp(x, cp, xe, cpe, path):
     plt.savefig(path + '/cp.png', format='png')
     plt.show()
 
-def plot_cf(x, sh, path):
+def plot_cf(x, sh, xe, she, path):
     # Figure - Cp distribution
     plt.figure()
     plt.rc('legend',**{'fontsize':15})
@@ -121,13 +158,13 @@ def plot_cf(x, sh, path):
     b = [0, 0]
     plt.plot(a, b, ':', color='k')
 
+    #p0, = plt.plot(xe[0], she[0], '--', color='purple', linewidth=2)	
     p0, = plt.plot(x[0], sh[0], '-', color='red', linewidth=2)	
     p1, = plt.plot(x[1], sh[1], '-', color='darkorange', linewidth=2)	
-    #p2, = plt.plot(x[2], sh[2], '-', color='darkorange', linewidth=2)	
-
 
     plt.legend([p0, p1],
     #[r'Nektar++: Stagnation Inflow bc',
+    #[r'Michelassi et al. 2014, 3.2\% Tu',
     [r'Present, 0\% Tu',
     r'Present, 3.2\% Tu'],
     #r'Present, 7.8\% Tu'],

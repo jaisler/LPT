@@ -10,12 +10,23 @@ with open(r'configuration.yaml') as file:
     # scalar values to Python the dictionary format
     params = yaml.load(file, Loader=yaml.FullLoader)
 
-
 if (params['routine']['psd']):
+    objPSDUp = DataPSDUpstream(params)
+    dt = objPSDUp.GetDt()
+    u = objPSDUp.GetU()
+    (fu, Su) = fc.CalculatePSD(u, dt, params, flag='up')
+    for i in range(len(fu)):
+        for j in range(len(fu[i])):
+            fu[i][j] = fu[i][j] * (params['C'] / params['Uinf'])
+            Su[i][j] = Su[i][j] / (params['Uinf']**2)
+    pl.plot_psd_velocity_upstream(fu, Su, params)  
+    # delete object  
+    del objPSDUp
+
     objPSD = DataPSD(params)
     dt = objPSD.GetDt()
     u = objPSD.GetU()
-    (fu, Su) = fc.CalculatePSD(u, dt, params)
+    (fu, Su) = fc.CalculatePSD(u, dt, params, flag='down')
     for i in range(len(fu)):
         for j in range(len(fu[i])):
             fu[i][j] = fu[i][j] * (params['C'] / params['Uinf'])
@@ -175,12 +186,18 @@ if (params['routine']['phisical']):
     # Plot Cp distribution
     pl.plot_cp(x/cax, cp, xexp, cpexp, params['path0']) 
 
+
+    objExpCf = DataExpCf(params) # Experimental data
+    # Get experimental data
+    xexp = objExpCf.GetX()
+    cfexp = objExpCf.GetCF()
+    
     # X-shear stress 
     wss = objField.GetWSS()
     # Skin friction: Implementation from Garai et al. 2015
     cf = fc.skin_friction_coefficiet(x, wss, P1, P2, params) 
     # Plot x-shear stress
-    pl.plot_cf(x/cax, cf, params['path0'])
+    pl.plot_cf(x/cax, cf, xexp, cfexp, params['path0'])
 
     # rho density
     rho = objField.GetRho()
@@ -206,4 +223,3 @@ if (params['routine']['phisical']):
 
     # Plot wake loss
     pl.plot_wake_loss(ystarFlip, lossFlip, xexp, lossexp, params['path0'])
-

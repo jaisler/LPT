@@ -68,7 +68,7 @@ class DataSlice:
     def __init__(self, params, loc):
         """ Initialisation of the data from .csv files. 
             The data in the file is related to the inlet or exit
-            measurements. It is taken at -0.5*Cax or at Cax + 0.5Cax from
+            measurements. It is taken at -0.3*Cax or at Cax + 0.5Cax from
             the leading edge for the inlet and exit measurements, respectively 
             """
         
@@ -243,6 +243,36 @@ class DataPSD:
 
     def GetDt(self):
         return self.dt
+class DataPSDUpstream:
+    def __init__(self, params):
+        """ Extract data from a .csv file 
+            to calculate the Power Density Spectra """
+
+        self.u = [] 
+        self.t = []
+        self.dt = []
+        df = []
+        for i in range(params['nfilepsdUp']):
+            df.append(pd.read_csv(params['path'] + '/'
+                + params['filePSDUp'] + str(i) + '.csv',
+                delimiter=',',
+                skiprows=[j for j in range(1, params['psdlocUp'])]))
+
+            # Obtain data in each psdNpoints rows
+            df[i] = df[i].iloc[::params['psdNpointsUp'], :]
+
+            self.u.append(df[i]['rhou']/df[i]['rho'])
+            self.t.append(df[i]['t'])
+            self.dt.append(df[i]['t'][params['psdNpointsUp']] - df[i]['t'][0])
+
+    def GetU(self):
+        return self.u
+
+    def GetT(self):
+        return self.t
+
+    def GetDt(self):
+        return self.dt
 
 class DataSpatialCorrelation:
     def __init__(self, params):
@@ -341,6 +371,31 @@ class DataExp:
     def GetNpoints(self):
         return self.npoints
 
+class DataExpCf:
+    def __init__(self, params):
+        """ Initialisation of the data from .csv files. """
+        df = []
+        for i in range(params['nfilesCf']):
+            df.append(pd.read_csv(params['pathExpCf'] + '/' 
+                + params['fileECf'] + str(i) + '.csv', delimiter=','))
+            
+        self.x = [] 
+        self.cf = []
+        self.npoints = []
+        for i in range(params['nfilesCf']):
+            self.x.append(df[i]['x'])
+            self.cf.append(df[i]['cf'])
+            self.npoints.append(len(df[i]['x']))
+            
+    def GetX(self):       
+        return self.x
+
+    def GetCF(self):
+        return self.cf
+
+    def GetNpoints(self):
+        return self.npoints
+    
 class DataExpLoss:
     def __init__(self, params):
         """ Initialisation of the data from .csv files. """

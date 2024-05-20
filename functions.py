@@ -74,7 +74,7 @@ def pressure_coefficient(p, P1, P2, npoints, params):
     for j in range(params['nfiles']):
         cp.append([])
         for i in range(npoints[j]):
-            cp[j].append((p[j][i]-(P2[j]+0.004))/(P1[j]-(P2[j]+0.004))) #P2+0.004
+            cp[j].append((p[j][i]-(P2[j]))/(P1[j]-(P2[j]))) #P2+0.004
     return (cp)
 
 def skin_friction_coefficiet(x, wss, P1, P2, params):
@@ -115,9 +115,9 @@ def wake_loss_shift(loss, y, params):
     """ Calculate shift in the wake loss """
 
     shift = []
-    shift.append(196)
-    shift.append(196)
-    shift.append(196)
+    shift.append(200)
+    shift.append(200)
+    shift.append(200)
     lossShift = []
     yeShift = []
     for j in range(params['nfiles']):
@@ -162,23 +162,29 @@ def wake_loss_position(y, ymin, Py, params):
     return (ystar)
 
 
-def CalculatePSD(u, dt, params):
+def CalculatePSD(u, dt, params, flag):
     """ Calculate PSD """
     # f contains the frequency components
     # S is the PSD
     pf = []
     pS = []
     fs = []
+
+    if flag == 'down':
+        nfiles = params['nfilepsd']
+    elif flag == 'up':
+        nfiles = params['nfilepsdUp']
+
     #print(math.ceil(params['nfiles']/2))
     # Obtain the time step for each file and adjust parameters
-    for i in range(params['nfilepsd']):
+    for i in range(nfiles):
         dt[i] *= params['C']/params['Uinf']
         fs.append(int(1/dt[i]))
         u[i] *= params['Uinf']
 
     # Calculare PSD
     nameWin = 'hanning'
-    for i in range(params['nfilepsd']):
+    for i in range(nfiles):
         nx = int(len(u[i])/3)  # /6 number of windows - 3 or 6
         (f, S) = signal.welch(u[i], fs[i], scaling='density', 
                                     window=signal.get_window(nameWin, nx),
