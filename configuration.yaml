@@ -39,6 +39,13 @@ nfileExit: 16
 # inlet
 nfileInlet: 16
 
+# TKE 
+nfileprof: 1 # number of files 
+npointsz: 15
+npointsy: 80
+pfreq: 1
+qunt: 4 # quantity of TKE variables: tau11, tau22, tau33, tau12
+
 # Spline data
 spline: 606
 

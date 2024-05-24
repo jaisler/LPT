@@ -64,6 +64,126 @@ class Data:
         for i in range(self.npoints):
             fileHandle.write(str(self.x[fileNumber][i]) + ',' + str(self.wss[fileNumber][i]) + '\n')
 
+class DataTKE:
+    def __init__(self, params):
+        """ Extract data from a .csv file 
+            to calculate the Power Density Spectra """
+
+        self.rho = []
+        self.u = []
+        self.v = []
+        self.w = []
+        self.p = []
+        self.umag = []
+        self.tau = []
+        self.tke = []
+        self.prod = []
+        self.diss = []
+        self.t = []
+        self.dt = []
+        df = []
+        for i in range(params['nfileprof']):
+            df.append(pd.read_csv(params['path'] + '/'
+                + params['fileProf'] + str(i) + '.csv',
+                delimiter=',',))
+
+            # Prepare data: rho,u,v,w,p
+            self.rho.append(df[i]['rho'])
+            self.u.append(df[i]['rhou']/df[i]['rho'])
+            self.v.append(df[i]['rhov']/df[i]['rho'])
+            self.w.append(df[i]['rhow']/df[i]['rho'])
+            self.umag.append(np.sqrt((df[i]['rhou']/df[i]['rho'])**2 
+                                   + (df[i]['rhov']/df[i]['rho'])**2 
+                                   + (df[i]['rhow']/df[i]['rho'])**2))
+            self.p.append((params['gamma'] - 1) * (df[i]['E'] - 0.5 * self.umag[i]))
+
+            # Calculate Reynolds average for rho
+            rhom = np.zeros(params['npointsy'])
+            l = 0
+            tn = 0
+            while(l < len(self.u[i])):
+                for k in range(params['npointsy']):
+                    rhoAvgZ = 0
+                    for j in range(params['npointsz']):
+                        rhoAvgZ += self.rho[i][j + k * params['npointsz'] + l]
+                    # Obtain the average in z-direction
+                    rhoAvgZ = rhoAvgZ / params['npointsz']
+                    # Obtain the average in time
+                    rhom[k] += rhoAvgZ 
+                l += params['npointsz'] * params['npointsy']            
+                tn += 1
+            rhom /= tn 
+
+            # Calculate Fabre averages for u,v,w -> {u_i} = <rho u_i> / <rho> 
+            umf,vmf,wmf = np.zeros(params['npointsy'])
+            l = 0
+            tn = 0
+            while(l < len(self.u[i])):
+                for k in range(params['npointsy']):
+                    uAvgZ,vAvgZ,wAvgZ = 0
+                    for j in range(params['npointsz']):
+                        uAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
+                                  * self.u[i][j + k * params['npointsz'] + l]) 
+                        vAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
+                                  * self.v[i][j + k * params['npointsz'] + l])
+                        wAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
+                                  * self.w[i][j + k * params['npointsz'] + l])
+                    # Obtain the average in z-direction
+                    umf[k] += (uAvgZ / params['npointsz']) 
+                    vmf[k] += (uAvgZ / params['npointsz']) 
+                    wmf[k] += (uAvgZ / params['npointsz']) 
+                l += params['npointsz'] * params['npointsy']            
+                tn += 1
+            umf,vmf,wmf /= (tn * rhom)
+
+            # Calculate the Reynolds Stresses
+            qunt = params['qunt']
+            taumz = np.zeros((qunt, params['npointsy']))
+            for j in range(params['npointsz']): # z
+                tau = np.zeros((qunt, params['npointsy'])) # tau11: 0, tau22: 1, tau33: 2, tau12: 3
+                tn = 0
+                l = 0
+                while(l < len(self.u[i])): # time
+                    for k in range(params['npointsy']): # y
+                        tau[0][k] += (self.rho[i][j + k * params['npointsz'] + l] * 
+                            (self.u[i][j + k * params['npointsz'] + l] - umf[k])**2)
+                        tau[1][k] += (self.rho[i][j + k * params['npointsz'] + l] * 
+                            (self.v[i][j + k * params['npointsz'] + l] - vmf[k])**2)
+                        tau[2][k] += (self.rho[i][j + k * params['npointsz'] + l] * 
+                            (self.w[i][j + k * params['npointsz'] + l] - wmf[k])**2)
+                        tau[3][k] += (self.rho[i][j + k * params['npointsz'] + l] 
+                            * (self.u[i][j + k * params['npointsz'] + l] - umf[k]) 
+                            * (self.v[i][j + k * params['npointsz'] + l] - vmf[k]))
+                    l += params['npointsy'] * params['npointsz']          
+                    tn += 1
+
+                for l in range(qunt):
+                    tau[l] /= tn 
+                    taumz[l] += tau[l]
+
+            for i in range(qunt):
+                taumz[i] /= params['npointsz'] 
+            self.tau.append(taumz) # Reynolds stresses
+
+
+            # Calculate the TKE
+            self.tke.append(0.5 * (taumz[0] + taumz[1] + taumz[2]) / rhom)
+            
+            #self.prod.append(prod)
+            #self.diss.append(diss)
+
+    def GetTau11(self):
+        return self.tau
+
+    def GetTKE(self):
+        return self.tke 
+
+    def GetProd(self):
+        return self.prod   
+
+    def GetDiss(self):
+        return self.diss 
+
 class DataSlice:
     def __init__(self, params, loc):
         """ Initialisation of the data from .csv files. 
