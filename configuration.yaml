@@ -3,7 +3,7 @@
 
 # Path 
 #path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
-path: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM7TI32_2/post' 
+path: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM7TI32_3/post' 
 #path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgTIM6Forc/post' 
 pathExp: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpCf: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
@@ -23,12 +23,14 @@ fileI: 'inlet'
 fileO: 'exit'
 filehist: 'hpoint'
 filePSDUp: 'hpointUp'
+fileTKE: TKE_down
 
 # Routines
 routine:
   phisical: False
   correlation: False
-  psd: True
+  psd: False
+  tke: True
 
 # blade
 nfileBlade: 16
@@ -40,7 +42,7 @@ nfileExit: 16
 nfileInlet: 16
 
 # TKE 
-nfileprof: 1 # number of files 
+nfileTKE: 1 # number of files 
 npointsz: 15
 npointsy: 80
 pfreq: 1

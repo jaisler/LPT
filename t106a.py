@@ -10,6 +10,20 @@ with open(r'configuration.yaml') as file:
     # scalar values to Python the dictionary format
     params = yaml.load(file, Loader=yaml.FullLoader)
 
+if (params['routine']['tke']):
+    objTKE = DataTKE(params)
+    tau = objTKE.GetTau()
+    tke = objTKE.GetTKE()
+    y = objTKE.GetY()
+
+    print(y)
+    print(tke[0])
+
+    pl.plot_tau_downstream(y,tau,params)
+    pl.plot_tke_downstream(y,tke,params)
+
+    del objTKE
+
 if (params['routine']['psd']):
     objPSDUp = DataPSDUpstream(params)
     dt = objPSDUp.GetDt()
