@@ -3,6 +3,61 @@ import matplotlib.pyplot as plt
 from matplotlib import rc, cm
 rc('text', usetex=True)
 
+def plot_tau_downstream(y,tau,params):
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
+    plt.rc('legend',**{'fontsize':14})
+
+    p0, = plt.plot(y, tau[0], '-', color='darkorange', linewidth=3)	
+    p1, = plt.plot(y, tau[1], '-', color='orangered', linewidth=3)	
+    p2, = plt.plot(y, tau[2], '-', color='red', linewidth=3)	
+    p3, = plt.plot(y, tau[3], '-', color='darkred', linewidth=3)	
+
+    plt.legend([p0,p1,p2,p3],
+    [r'\tau_{11}',
+     r'\tau_{22}',
+     r'\tau_{33}',
+     r'\tau_{12}',
+     ],
+    loc='best')
+
+    plt.tick_params(reset=True, direction="in", which='both')
+    plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='major')
+    plt.subplots_adjust(left=0.152, right=0.96, bottom=0.135, top=0.96)
+    #plt.xlim((1e0,500)) 
+    #plt.ylim((-150, 10)) 
+    plt.xticks(fontsize = 20)
+    plt.yticks(fontsize = 20)
+    plt.xlabel(r'$y$',fontsize = 18)
+    plt.ylabel(r'$TKE$',fontsize = 18)
+    fig.savefig(params['path'] + '/tke.pdf', format='PDF')
+    fig.savefig(params['path'] + '/tke.png', format='png')
+    plt.show()
+
+def plot_tke_downstream(y,tke,params):
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
+    plt.rc('legend',**{'fontsize':14})
+
+    p0, = plt.plot(y, tke[0], '-', color='darkorange', linewidth=3)	
+
+    plt.legend([p0],
+    [r'TKE'],
+    loc='best')
+
+    plt.tick_params(reset=True, direction="in", which='both')
+    plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='major')
+    plt.subplots_adjust(left=0.152, right=0.96, bottom=0.135, top=0.96)
+    #plt.xlim((1e0,500)) 
+    #plt.ylim((-150, 10)) 
+    plt.xticks(fontsize = 20)
+    plt.yticks(fontsize = 20)
+    plt.xlabel(r'$y$',fontsize = 18)
+    plt.ylabel(r'$TKE$',fontsize = 18)
+    fig.savefig(params['path'] + '/tke.pdf', format='PDF')
+    fig.savefig(params['path'] + '/tke.png', format='png')
+    plt.show()
+
 def plot_psd_velocity(f,S,params):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
