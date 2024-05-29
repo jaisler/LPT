@@ -15,10 +15,7 @@ if (params['routine']['tke']):
     tau = objTKE.GetTau()
     tke = objTKE.GetTKE()
     y = objTKE.GetY()
-
-    print(y)
-    print(tke[0])
-
+    
     pl.plot_tau_downstream(y,tau,params)
     pl.plot_tke_downstream(y,tke,params)
 

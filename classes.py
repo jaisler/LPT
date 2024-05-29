@@ -69,6 +69,7 @@ class DataTKE:
         """ Extract data from a .csv file 
             to calculate the Power Density Spectra """
 
+        self.y = []
         self.rho = []
         self.u = []
         self.v = []
@@ -82,9 +83,9 @@ class DataTKE:
         self.t = []
         self.dt = []
         df = []
-        for i in range(params['nfileprof']):
+        for i in range(params['nfileTKE']):
             df.append(pd.read_csv(params['path'] + '/'
-                + params['fileProf'] + str(i) + '.csv',
+                + params['fileTKE'] + '.csv',
                 delimiter=',',))
 
             # Prepare data: rho,u,v,w,p
@@ -115,12 +116,16 @@ class DataTKE:
             rhom /= tn 
 
             # Calculate Fabre averages for u,v,w -> {u_i} = <rho u_i> / <rho> 
-            umf,vmf,wmf = np.zeros(params['npointsy'])
+            umf = np.zeros(params['npointsy'])
+            vmf = np.zeros(params['npointsy'])
+            wmf = np.zeros(params['npointsy'])
             l = 0
             tn = 0
             while(l < len(self.u[i])):
                 for k in range(params['npointsy']):
-                    uAvgZ,vAvgZ,wAvgZ = 0
+                    uAvgZ = 0
+                    vAvgZ = 0
+                    wAvgZ = 0
                     for j in range(params['npointsz']):
                         uAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
                                   * self.u[i][j + k * params['npointsz'] + l]) 
@@ -130,13 +135,15 @@ class DataTKE:
                                   * self.w[i][j + k * params['npointsz'] + l])
                     # Obtain the average in z-direction
                     umf[k] += (uAvgZ / params['npointsz']) 
-                    vmf[k] += (uAvgZ / params['npointsz']) 
-                    wmf[k] += (uAvgZ / params['npointsz']) 
+                    vmf[k] += (vAvgZ / params['npointsz']) 
+                    wmf[k] += (wAvgZ / params['npointsz']) 
                 l += params['npointsz'] * params['npointsy']            
                 tn += 1
-            umf,vmf,wmf /= (tn * rhom)
+            umf /= (tn * rhom)
+            vmf /= (tn * rhom)
+            wmf /= (tn * rhom)
 
-            # Calculate the Reynolds Stresses
+            # Calculate the Reynolds Stresses for compressible flow
             qunt = params['qunt']
             taumz = np.zeros((qunt, params['npointsy']))
             for j in range(params['npointsz']): # z
@@ -145,15 +152,15 @@ class DataTKE:
                 l = 0
                 while(l < len(self.u[i])): # time
                     for k in range(params['npointsy']): # y
-                        tau[0][k] += (self.rho[i][j + k * params['npointsz'] + l] * 
-                            (self.u[i][j + k * params['npointsz'] + l] - umf[k])**2)
-                        tau[1][k] += (self.rho[i][j + k * params['npointsz'] + l] * 
-                            (self.v[i][j + k * params['npointsz'] + l] - vmf[k])**2)
-                        tau[2][k] += (self.rho[i][j + k * params['npointsz'] + l] * 
-                            (self.w[i][j + k * params['npointsz'] + l] - wmf[k])**2)
+                        tau[0][k] += (self.rho[i][j + k * params['npointsz'] + l] 
+                                   * (self.u[i][j + k * params['npointsz'] + l] - umf[k])**2)
+                        tau[1][k] += (self.rho[i][j + k * params['npointsz'] + l]  
+                                   * (self.v[i][j + k * params['npointsz'] + l] - vmf[k])**2)
+                        tau[2][k] += (self.rho[i][j + k * params['npointsz'] + l]  
+                                   * (self.w[i][j + k * params['npointsz'] + l] - wmf[k])**2)
                         tau[3][k] += (self.rho[i][j + k * params['npointsz'] + l] 
-                            * (self.u[i][j + k * params['npointsz'] + l] - umf[k]) 
-                            * (self.v[i][j + k * params['npointsz'] + l] - vmf[k]))
+                                   * (self.u[i][j + k * params['npointsz'] + l] - umf[k]) 
+                                   * (self.v[i][j + k * params['npointsz'] + l] - vmf[k]))
                     l += params['npointsy'] * params['npointsz']          
                     tn += 1
 
@@ -163,16 +170,20 @@ class DataTKE:
 
             for i in range(qunt):
                 taumz[i] /= params['npointsz'] 
-            self.tau.append(taumz) # Reynolds stresses
+                self.tau.append(taumz[i]) # Reynolds stresses
 
+            # Calculate the TKE for compressible flow. 
+            # tke is divided by rhom due to Favre average.
+            self.tke.append((0.5 * (taumz[0] + taumz[1] + taumz[2])) / rhom) 
+            print('rhom = ', rhom)
 
-            # Calculate the TKE
-            self.tke.append(0.5 * (taumz[0] + taumz[1] + taumz[2]) / rhom)
-            
             #self.prod.append(prod)
             #self.diss.append(diss)
 
-    def GetTau11(self):
+            # Obtain y range based on the mesh
+            self.y = np.linspace(-1.378, -0.581, 80)
+
+    def GetTau(self):
         return self.tau
 
     def GetTKE(self):
@@ -182,7 +193,10 @@ class DataTKE:
         return self.prod   
 
     def GetDiss(self):
-        return self.diss 
+        return self.diss  
+
+    def GetY(self):
+        return self.y
 
 class DataSlice:
     def __init__(self, params, loc):
@@ -325,11 +339,6 @@ class DataPSD:
         self.dt = []
         df = []
         for i in range(params['nfilepsd']):
-            #subprocess.call(["sed -e 's/ /,/g' "
-            #          + params['path'] + "/"
-            #          + params['filePSD'] + str(i)+ ".his > "
-            #          + params['path'] + "/"
-            #          + params['filePSD'] + str(i) + ".csv"], shell=True)
             df.append(pd.read_csv(params['path'] + '/'
                 + params['filehist'] + str(i) + '.csv',
                 delimiter=',',
@@ -363,6 +372,7 @@ class DataPSD:
 
     def GetDt(self):
         return self.dt
+    
 class DataPSDUpstream:
     def __init__(self, params):
         """ Extract data from a .csv file 
