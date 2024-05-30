@@ -14,10 +14,12 @@ if (params['routine']['tke']):
     objTKE = DataTKE(params)
     tau = objTKE.GetTau()
     tke = objTKE.GetTKE()
+    Tu = objTKE.GetTu()
     y = objTKE.GetY()
     
-    pl.plot_tau_downstream(y,tau,params)
-    pl.plot_tke_downstream(y,tke,params)
+    pl.plot_tau(y,tau,params)
+    pl.plot_tke(y,tke,params)
+    pl.plot_Tu(y,Tu,params)
 
     del objTKE
 

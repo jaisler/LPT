@@ -80,6 +80,7 @@ class DataTKE:
         self.tke = []
         self.prod = []
         self.diss = []
+        self.Tu = []
         self.t = []
         self.dt = []
         df = []
@@ -175,13 +176,16 @@ class DataTKE:
             # Calculate the TKE for compressible flow. 
             # tke is divided by rhom due to Favre average.
             self.tke.append((0.5 * (taumz[0] + taumz[1] + taumz[2])) / rhom) 
-            print('rhom = ', rhom)
 
+            # Turbulence Intensity units in percentage
+            self.Tu.append(100 * (np.sqrt(0.333333*(taumz[0] + taumz[1] + taumz[2])) 
+                           / params['Mach2is']))
             #self.prod.append(prod)
             #self.diss.append(diss)
 
             # Obtain y range based on the mesh
-            self.y = np.linspace(-1.378, -0.581, 80)
+            #self.y = np.linspace(-1.378, -0.581, 80)
+            self.y = np.linspace(-0.647, 0.151, 80)
 
     def GetTau(self):
         return self.tau
@@ -194,6 +198,9 @@ class DataTKE:
 
     def GetDiss(self):
         return self.diss  
+
+    def GetTu(self):
+        return self.Tu  
 
     def GetY(self):
         return self.y

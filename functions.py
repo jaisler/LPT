@@ -85,7 +85,6 @@ def skin_friction_coefficiet(x, wss, P1, P2, params):
         flag1 = True
         flag2 = False
         sign = 1
-        #print(x[i])
         for j in range(len(wss[i]) - 1):
             if x[i][j] > x[i][j+1] and flag1:
                 sign *= -1 

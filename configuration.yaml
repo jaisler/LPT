@@ -23,14 +23,14 @@ fileI: 'inlet'
 fileO: 'exit'
 filehist: 'hpoint'
 filePSDUp: 'hpointUp'
-fileTKE: TKE_down
+fileTKE: TKE_up
 
 # Routines
 routine:
   phisical: False
   correlation: False
-  psd: False
-  tke: True
+  psd: True
+  tke: False
 
 # blade
 nfileBlade: 16
@@ -56,7 +56,7 @@ nfilepsd: 13 # number of psd files
 psdloc: 16 # location in the .his file (data)
 psdNpoints: 16 # number of points in the psd file
 
-# PSD data downstream
+# PSD data upstream
 nfilepsdUp: 3 # number of psd files 
 psdlocUp: 8 # location in the .his file (data)
 psdNpointsUp: 8 # number of points in the psd file
@@ -87,6 +87,8 @@ rhoInf: 1.0 # Kg/m3
 uInf: 1.0
 # Gas constant
 R: 12.0965
+# Exit isentropic Mach number
+Mach2is: 0.407
 # ymin
 ymin: 1.79131
 # Lz
