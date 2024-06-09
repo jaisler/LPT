@@ -106,7 +106,7 @@ class DataTKE:
             while(l < len(self.u[i])):
                 for k in range(params['npointsy']):
                     rhoAvgZ = 0
-                    for j in range(params['npointsz']):
+                    for j in range(1): # params['npointsz']
                         rhoAvgZ += self.rho[i][j + k * params['npointsz'] + l]
                     # Obtain the average in z-direction
                     rhoAvgZ = rhoAvgZ / params['npointsz']
@@ -127,7 +127,7 @@ class DataTKE:
                     uAvgZ = 0
                     vAvgZ = 0
                     wAvgZ = 0
-                    for j in range(params['npointsz']):
+                    for j in range(1): #params['npointsz']
                         uAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
                                   * self.u[i][j + k * params['npointsz'] + l]) 
                         vAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
@@ -172,6 +172,10 @@ class DataTKE:
             for i in range(qunt):
                 taumz[i] /= params['npointsz'] 
                 self.tau.append(taumz[i]) # Reynolds stresses
+                # Obtain y range based on the mesh
+                self.y.append(np.linspace(-1.378, -0.581, 80))
+                #self.y.append(np.linspace(-0.647, 0.151, 80))
+
 
             # Calculate the TKE for compressible flow. 
             # tke is divided by rhom due to Favre average.
@@ -182,10 +186,6 @@ class DataTKE:
                            / params['Mach2is']))
             #self.prod.append(prod)
             #self.diss.append(diss)
-
-            # Obtain y range based on the mesh
-            #self.y = np.linspace(-1.378, -0.581, 80)
-            self.y = np.linspace(-0.647, 0.151, 80)
 
     def GetTau(self):
         return self.tau

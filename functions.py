@@ -110,40 +110,35 @@ def wake_loss(p, rhoe, ue, ve, we, uM, P1, P2, npoints, params):
 
     return (loss)
 
-def wake_loss_shift(loss, y, params):
-    """ Calculate shift in the wake loss """
-
+def shift_data(u, y, params):
+    """ Calculate shift for data """
     shift = []
-    shift.append(200)
-    shift.append(200)
-    shift.append(200)
-    lossShift = []
+    for i in range(len(u)):
+        shift.append(params['shift'])
+    uShift = []
     yeShift = []
-    for j in range(params['nfiles']):
-        lossShift.append(np.zeros(len(loss[j])))
+    for j in range(len(u)):
+        uShift.append(np.zeros(len(u[j])))
         value = y[j][shift[j]] 
         k = shift[j]
-        yeShift.append(np.zeros(len(loss[j])))
-        for i in range(len(loss[j])):
-            lossShift[j][i] = loss[j][k]
+        yeShift.append(np.zeros(len(u[j])))
+        for i in range(len(u[j])):
+            uShift[j][i] = u[j][k]
             yeShift[j][i] = y[j][k] - value
-            if (k == (len(loss[j]) - 1)):
+            if (k == (len(u[j]) - 1)):
                 k = 0
-                shift[j] = len(loss[j]) - shift[j] 
+                shift[j] = len(u[j]) - shift[j] 
                 value = - y[j][shift[j]] #+ add[j]
             else:
                 k += 1
     
-    return (lossShift, yeShift)
+    return (uShift, yeShift)
 
-def wake_loss_flip(loss, y, params):
-    """ Flip data of the wake loss """
-
-    lossFlip = []
+def flip_data(y, params):
+    """ Flip data  """
     yFlip = []
     for j in range(params['nfiles']):
-        k = len(loss[j])
-        lossFlip.append([])
+        k = len(y[j])
         yFlip.append([])
         for i in range(k):
             if i == 0:
@@ -151,12 +146,12 @@ def wake_loss_flip(loss, y, params):
             else:
                 yFlip[j].append(yFlip[j][i-1] - abs(y[j][i]-y[j][i-1]))
 
-    return (loss, yFlip)
+    return yFlip
 
-def wake_loss_position(y, ymin, Py, params):
-    """ Calculate the wake loss position """
+def norm_position(y, ymin, Py, params):
+    """ Calculate the correct position and then normalise the data """   
     ystar = []
-    for j in range(params['nfiles']):
+    for j in range(len(y)):
         ystar.append((y[j] + ymin) / Py)
     return (ystar)
 
@@ -195,7 +190,6 @@ def CalculatePSD(u, dt, params, flag):
 
 def CalculateTwoPointsCorrelation(u, params):
     """ Calculate two-points correlation function """
-
     # denominator - RMS
     k = 0
     tn = 0

@@ -23,14 +23,14 @@ fileI: 'inlet'
 fileO: 'exit'
 filehist: 'hpoint'
 filePSDUp: 'hpointUp'
-fileTKE: TKE_up
+fileTKE: 'TKE_down' #TKE_up 
 
 # Routines
 routine:
   phisical: False
   correlation: False
-  psd: True
-  tke: False
+  psd: False
+  tke: True
 
 # blade
 nfileBlade: 16
@@ -89,10 +89,15 @@ uInf: 1.0
 R: 12.0965
 # Exit isentropic Mach number
 Mach2is: 0.407
-# ymin
-ymin: 1.79131
+# ymin for wake loss
+yminLoss: 1.79131
+# ymin for tau 
+yminTau: 1.378
 # Lz
 Lz: 0.1
 # At P=3
 dzplus: 0.0027777776666666667 #0.0083333333
 dyplus: 3.236666666666667e-05 #0.971e-4
+# Shift position
+# wake loss = 200, tau = 20
+shift: 12

@@ -8,7 +8,7 @@ def plot_Tu(y,Tu,params):
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    p0, = plt.plot(Tu[0], y, '-', color='darkorange', linewidth=3)	
+    p0, = plt.plot(Tu[0], y[0], '-', color='darkorange', linewidth=3)	
 
     #plt.legend([p0],
     #[
@@ -34,10 +34,10 @@ def plot_tau(y,tau,params):
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    p0, = plt.plot(tau[0], y, '-', color='darkorange', linewidth=3)	
-    p1, = plt.plot(tau[1], y, '-', color='red', linewidth=3)	
-    p2, = plt.plot(tau[2], y, '-', color='crimson', linewidth=3)	
-    p3, = plt.plot(tau[3], y, '-', color='darkred', linewidth=3)	
+    p0, = plt.plot(tau[0], y[0], '-', color='darkorange', linewidth=3)	
+    p1, = plt.plot(tau[1], y[0], '-', color='red', linewidth=3)	
+    p2, = plt.plot(tau[2], y[0], '-', color='crimson', linewidth=3)	
+    p3, = plt.plot(tau[3], y[0], '-', color='darkred', linewidth=3)	
 
     plt.legend([p0,p1,p2,p3],
     [
@@ -56,7 +56,7 @@ def plot_tau(y,tau,params):
     plt.xticks(fontsize = 20)
     plt.yticks(fontsize = 20)
     plt.xlabel(r'$\tau_{ij}$',fontsize = 18)
-    plt.ylabel(r'$y$',fontsize = 18)
+    plt.ylabel(r'$y^{*}/P_{y}$',fontsize = 18)
     fig.savefig(params['path'] + '/tau.pdf', format='PDF')
     fig.savefig(params['path'] + '/tau.png', format='png')
     plt.show()
@@ -66,7 +66,7 @@ def plot_tke(y,tke,params):
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    p0, = plt.plot(tke[0], y, '-', color='darkorange', linewidth=3)	
+    p0, = plt.plot(tke[0], y[0], '-', color='darkorange', linewidth=3)	
 
     plt.legend([p0],
     [r'TKE'],

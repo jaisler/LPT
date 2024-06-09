@@ -17,8 +17,14 @@ if (params['routine']['tke']):
     Tu = objTKE.GetTu()
     y = objTKE.GetY()
     
-    pl.plot_tau(y,tau,params)
+    # Reynolds Stresses
+    ystar = fc.norm_position(y, params['yminTau'], params['Py'], params)
+    (tauShift, ystarShift) = fc.shift_data(tau, ystar, params)
+    ystarFlip = fc.flip_data(ystarShift, params)
+    pl.plot_tau(ystarFlip,tauShift,params)
+    # TKE
     pl.plot_tke(y,tke,params)
+    # Trubulence intensity Tu
     pl.plot_Tu(y,Tu,params)
 
     del objTKE
@@ -223,7 +229,7 @@ if (params['routine']['phisical']):
     ye = objExit.GetY() 
     npoints = objExit.GetNpoints()
     loss = fc.wake_loss(pe, rhoe, ue, ve, we, uM, P1, P2, npoints, params)
-    ystar = fc.wake_loss_position(ye, params['ymin'], params['Py'], params)
+    ystar = fc.norm_position(ye, params['yminLoss'], params['Py'], params)
 
     # Exp
     objExpLoss = DataExpLoss(params) # Experimental data
@@ -231,8 +237,8 @@ if (params['routine']['phisical']):
     xexp = objExpLoss.GetX()
     lossexp = objExpLoss.GetLoss()
 
-    (lossShift, ystarShift) = fc.wake_loss_shift(loss, ystar, params)
-    (lossFlip, ystarFlip) = fc.wake_loss_flip(lossShift, ystarShift, params)
+    (lossShift, ystarShift) = fc.shift_data(loss, ystar, params)
+    ystarFlip = fc.flip_data(lossShift, ystarShift, params)
 
     # Plot wake loss
-    pl.plot_wake_loss(ystarFlip, lossFlip, xexp, lossexp, params['path0'])
+    pl.plot_wake_loss(ystarFlip, lossShift, xexp, lossexp, params['path0'])
