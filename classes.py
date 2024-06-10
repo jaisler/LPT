@@ -106,7 +106,7 @@ class DataTKE:
             while(l < len(self.u[i])):
                 for k in range(params['npointsy']):
                     rhoAvgZ = 0
-                    for j in range(1): # params['npointsz']
+                    for j in range(params['npointsz']): # params['npointsz']
                         rhoAvgZ += self.rho[i][j + k * params['npointsz'] + l]
                     # Obtain the average in z-direction
                     rhoAvgZ = rhoAvgZ / params['npointsz']
@@ -127,7 +127,7 @@ class DataTKE:
                     uAvgZ = 0
                     vAvgZ = 0
                     wAvgZ = 0
-                    for j in range(1): #params['npointsz']
+                    for j in range(params['npointsz']): #params['npointsz']
                         uAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
                                   * self.u[i][j + k * params['npointsz'] + l]) 
                         vAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
@@ -557,4 +557,53 @@ class DataExpLoss:
 
     def GetNpoints(self):
         return self.npoints
+    
+class DataExpTau:
+    def __init__(self, params):
+        """ Initialisation of the data from .csv files. """
+        df = []
+        for i in range(params['nfilesTau']):
+            df.append(pd.read_csv(params['pathExpTau'] + '/' 
+                + params['fileETau'] + str(i) +'.csv', delimiter=','))
+            
+        self.y = [] 
+        self.tau = []
+        self.npoints = []
+        for i in range(params['nfilesTau']):
+            self.y.append(df[i]['y'])
+            self.tau.append(df[i]['tau'])
+            self.npoints.append(len(df[i]['y']))
+            
+    def GetY(self):       
+        return self.y
 
+    def GetTau(self):
+        return self.tau
+
+    def GetNpoints(self):
+        return self.npoints
+    
+class DataExpTKE:
+    def __init__(self, params):
+        """ Initialisation of the data from .csv files. """
+        df = []
+        for i in range(params['nfilesTKE']):
+            df.append(pd.read_csv(params['pathExpTKE'] + '/' 
+                + params['fileETKE'] + str(i) +'.csv', delimiter=','))
+            
+        self.y = [] 
+        self.tke = []
+        self.npoints = []
+        for i in range(params['nfilesTKE']):
+            self.y.append(df[i]['y'] + params['shiftTKE'])
+            self.tke.append(df[i]['tke'])
+            self.npoints.append(len(df[i]['y']))
+            
+    def GetY(self):       
+        return self.y
+
+    def GetTKE(self):
+        return self.tke
+
+    def GetNpoints(self):
+        return self.npoints

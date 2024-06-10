@@ -29,22 +29,34 @@ def plot_Tu(y,Tu,params):
     fig.savefig(params['path'] + '/Tu.png', format='png')
     plt.show()
 
-def plot_tau(y,tau,params):
+def plot_tau(y,tau,yexp,tauexp,params):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
+    a = [0.0]
+    b = [0.0]
+
+    # Nektar++
     p0, = plt.plot(tau[0], y[0], '-', color='darkorange', linewidth=3)	
     p1, = plt.plot(tau[1], y[0], '-', color='red', linewidth=3)	
     p2, = plt.plot(tau[2], y[0], '-', color='crimson', linewidth=3)	
     p3, = plt.plot(tau[3], y[0], '-', color='darkred', linewidth=3)	
-
-    plt.legend([p0,p1,p2,p3],
+    # Exp
+    plt.plot(tauexp[0], yexp[0], ':', color='darkorange', linewidth=3)	
+    plt.plot(tauexp[1], yexp[1], ':', color='red', linewidth=3)	
+    plt.plot(tauexp[2], yexp[2], ':', color='crimson', linewidth=3)	
+    plt.plot(tauexp[3], yexp[3], ':', color='darkred', linewidth=3)	
+    # Point
+    p4, = plt.plot(a, b, ':', color='k', linewidth=3)	
+     
+    plt.legend([p0,p1,p2,p3,p4],
     [
      r'$\tau_{11}$',
      r'$\tau_{22}$',
      r'$\tau_{33}$',
      r'$\tau_{12}$',
+     r'Sandberg $\&$ Michelassi 2019',
      ],
     loc='best')
 
@@ -61,15 +73,18 @@ def plot_tau(y,tau,params):
     fig.savefig(params['path'] + '/tau.png', format='png')
     plt.show()
 
-def plot_tke(y,tke,params):
+def plot_tke(y,tke,yexp,tkeexp,params):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
     p0, = plt.plot(tke[0], y[0], '-', color='darkorange', linewidth=3)	
+    p1, = plt.plot(tkeexp[0], yexp[0], ':', color='k', linewidth=3)	
 
-    plt.legend([p0],
-    [r'TKE'],
+    plt.legend([p0,p1],
+    [r'Nektar++',
+     r'Sandberg $\&$ Michelassi 2019',
+    ],
     loc='best')
 
     plt.tick_params(reset=True, direction="in", which='both')

@@ -8,16 +8,22 @@ path: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C2
 pathExp: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpCf: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpLoss: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
+pathExpTau: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
+pathExpTKE: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 nfiles: 1 # how many compressible flow folders we have?
 nfilesCp: 4
 nfilesCf: 1
 nfilesLoss: 6
+nfilesTau: 4
+nfilesTKE: 1
 
 # File
 fileF: 'wallAvg'
 fileB: 'blade'
 fileE: 'expCp'
 fileECf: 'expCf'
+fileETau: 'expTau'
+fileETKE: 'expTKE'
 fileEL: 'expLoss'
 fileI: 'inlet'
 fileO: 'exit'
@@ -101,3 +107,5 @@ dyplus: 3.236666666666667e-05 #0.971e-4
 # Shift position
 # wake loss = 200, tau = 20
 shift: 12
+# Shift for tke
+shiftTKE: -0.68

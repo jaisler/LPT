@@ -11,19 +11,29 @@ with open(r'configuration.yaml') as file:
     params = yaml.load(file, Loader=yaml.FullLoader)
 
 if (params['routine']['tke']):
+    # Literature
+    objExpTau = DataExpTau(params)
+    objExpTKE = DataExpTKE(params)
+    yexptau = objExpTau.GetY()
+    tauexp = objExpTau.GetTau()
+    yexptke = objExpTKE.GetY()
+    tkeexp = objExpTKE.GetTKE()
+
+
+    # Nektar++
     objTKE = DataTKE(params)
     tau = objTKE.GetTau()
     tke = objTKE.GetTKE()
     Tu = objTKE.GetTu()
     y = objTKE.GetY()
-    
+
     # Reynolds Stresses
     ystar = fc.norm_position(y, params['yminTau'], params['Py'], params)
     (tauShift, ystarShift) = fc.shift_data(tau, ystar, params)
     ystarFlip = fc.flip_data(ystarShift, params)
-    pl.plot_tau(ystarFlip,tauShift,params)
+    pl.plot_tau(ystarFlip,tauShift,yexptau,tauexp,params)
     # TKE
-    pl.plot_tke(y,tke,params)
+    pl.plot_tke(y,tke,yexptke,tkeexp,params)
     # Trubulence intensity Tu
     pl.plot_Tu(y,Tu,params)
 
