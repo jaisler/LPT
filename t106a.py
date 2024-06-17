@@ -19,7 +19,6 @@ if (params['routine']['tke']):
     yexptke = objExpTKE.GetY()
     tkeexp = objExpTKE.GetTKE()
 
-
     # Nektar++
     objTKE = DataTKE(params)
     tau = objTKE.GetTau()
@@ -33,6 +32,7 @@ if (params['routine']['tke']):
     ystarFlip = fc.flip_data(ystarShift, params)
     pl.plot_tau(ystarFlip,tauShift,yexptau,tauexp,params)
     # TKE
+    #(tkeShift, yShift) = fc.shift_data(tke, y, params)
     pl.plot_tke(y,tke,yexptke,tkeexp,params)
     # Trubulence intensity Tu
     pl.plot_Tu(y,Tu,params)
@@ -248,7 +248,7 @@ if (params['routine']['phisical']):
     lossexp = objExpLoss.GetLoss()
 
     (lossShift, ystarShift) = fc.shift_data(loss, ystar, params)
-    ystarFlip = fc.flip_data(lossShift, ystarShift, params)
+    ystarFlip = fc.flip_data(ystarShift, params)
 
     # Plot wake loss
     pl.plot_wake_loss(ystarFlip, lossShift, xexp, lossexp, params['path0'])

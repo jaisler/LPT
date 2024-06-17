@@ -50,13 +50,13 @@ def plot_tau(y,tau,yexp,tauexp,params):
     # Point
     p4, = plt.plot(a, b, ':', color='k', linewidth=3)	
      
-    plt.legend([p0,p1,p2,p3,p4],
+    plt.legend([p4,p0,p1,p2,p3],
     [
-     r'$\tau_{11}$',
-     r'$\tau_{22}$',
-     r'$\tau_{33}$',
-     r'$\tau_{12}$',
-     r'Sandberg $\&$ Michelassi 2019',
+     r'Sandberg $\&$ Michelassi 2019, 3.8\% Tu',
+     r'$\tau_{11}$, 3.2\% Tu',
+     r'$\tau_{22}$, 3.2\% Tu',
+     r'$\tau_{33}$, 3.2\% Tu',
+     r'$\tau_{12}$, 3.2\% Tu',
      ],
     loc='best')
 
@@ -81,9 +81,10 @@ def plot_tke(y,tke,yexp,tkeexp,params):
     p0, = plt.plot(tke[0], y[0], '-', color='darkorange', linewidth=3)	
     p1, = plt.plot(tkeexp[0], yexp[0], ':', color='k', linewidth=3)	
 
-    plt.legend([p0,p1],
-    [r'Nektar++',
-     r'Sandberg $\&$ Michelassi 2019',
+    plt.legend([p1,p0],
+    [
+      r'Sandberg $\&$ Michelassi 2019, 3.8\% Tu',
+      r'Present, 3.2\% Tu',
     ],
     loc='best')
 
@@ -217,19 +218,26 @@ def plot_cp(x, cp, xe, cpe, path):
     plt.rc('legend',**{'fontsize':12})
 
     p0, = plt.plot(xe[0], cpe[0], 'o', color='none', markeredgecolor='k', markersize=13)	
-    p1, = plt.plot(xe[1], cpe[1], ':', color='gold', linewidth=2)	
+    #p1, = plt.plot(xe[1], cpe[1], ':', color='gold', linewidth=2)	
     p2, = plt.plot(xe[2], cpe[2], '--', color='b', linewidth=2)	
     p3, = plt.plot(xe[3], cpe[3], '--', color='purple', linewidth=2)	
-    p4, = plt.plot(x[0], cp[0], '-', color='red', linewidth=2)	
-    p5, = plt.plot(x[1], cp[1], '-', color='darkorange', linewidth=2)	
+    p4, = plt.plot(x[0], cp[0], '-', color='darkorange', linewidth=2)	
+    p5, = plt.plot(x[1], cp[1], '-', color='orangered', linewidth=2)	
+    p6, = plt.plot(x[2], cp[2], '-', color='red', linewidth=2)	
+    p7, = plt.plot(x[3], cp[3], '-', color='darkred', linewidth=2)	
 
-    plt.legend([p0, p1, p2, p3, p4, p5],
-    [r'Experiment, 0\% Tu', 
-     r'Wissink et al. 2003, 0\% Tu',
+
+    plt.legend([p0, p2, p3, p4, p5, p6, p7],
+    [
+     r'Experiment, 0\% Tu', 
+     #r'Wissink et al. 2003, 0\% Tu',
      r'Michelassi et al. 2014, 0.0\% Tu',
      r'Michelassi et al. 2014, 3.2\% Tu',
      r'Present, 0\% Tu',
-     r'Present, 3.2\% Tu'],
+     r'Present, 1.2\% Tu',
+     r'Present, 2\% Tu',
+     r'Present, 3.2\% Tu',
+    ],
     loc='center')
     
     plt.tick_params(reset=True, direction="in", which='both')
@@ -256,22 +264,25 @@ def plot_cf(x, sh, xe, she, path):
     plt.plot(a, b, ':', color='k')
 
     #p0, = plt.plot(xe[0], she[0], '--', color='purple', linewidth=2)	
-    p0, = plt.plot(x[0], sh[0], '-', color='red', linewidth=2)	
-    p1, = plt.plot(x[1], sh[1], '-', color='darkorange', linewidth=2)	
+    p0, = plt.plot(x[0], sh[0], '-', color='darkorange', linewidth=2)	
+    p1, = plt.plot(x[1], sh[1], '-', color='orangered', linewidth=2)	
+    p2, = plt.plot(x[2], sh[2], '-', color='red', linewidth=2)	
+    p3, = plt.plot(x[3], sh[3], '-', color='darkred', linewidth=2)	
 
-    plt.legend([p0, p1],
-    #[r'Nektar++: Stagnation Inflow bc',
-    #[r'Michelassi et al. 2014, 3.2\% Tu',
-    [r'Present, 0\% Tu',
-    r'Present, 3.2\% Tu'],
-    #r'Present, 7.8\% Tu'],
+    plt.legend([p0, p1, p2, p3],
+    [
+     r'Present, 0\% Tu',
+     r'Present, 1.2\% Tu',
+     r'Present, 2\% Tu',
+     r'Present, 3.2\% Tu',
+     ],
     loc='best')
 
     plt.tick_params(reset=True, direction="in", which='both')
     plt.subplots_adjust(left=0.245, right=0.95, bottom=0.16, top=0.97)
     plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='both')
-    plt.xlim((0.0,1))
-    plt.ylim((-0.01, 0.01))
+    plt.xlim((0.75,1))
+    plt.ylim((-0.001, 0.001))
     plt.xticks(fontsize = 24)
     plt.yticks(fontsize = 24)
     plt.xlabel(r'$x/C_{ax}$',fontsize = 24)
@@ -294,22 +305,25 @@ def plot_wake_loss(x, loss, xe, losse, path):
     p4, = plt.plot(xe[2], losse[2], ':', color='g', linewidth=2)  #0% TI G	
     p5, = plt.plot(xe[5], losse[5], ':', color='springgreen', linewidth=2)  #0% TI G	
 
-    p6, = plt.plot(x[0], loss[0], '-', color='red', linewidth=2)	
-    p7, = plt.plot(x[1], loss[1], '-', color='darkorange', linewidth=2)	
-    #p8, = plt.plot(x[2], loss[2], '-', color='darkorange', linewidth=2)	
+    p6, = plt.plot(x[0], loss[0], '-', color='darkorange', linewidth=2)	
+    p7, = plt.plot(x[1], loss[1], '-', color='orangered', linewidth=2)	
+    p8, = plt.plot(x[2], loss[2], '-', color='red', linewidth=2)	
+    p9, = plt.plot(x[3], loss[3], '-', color='darkred', linewidth=2)	
 
 
-    plt.legend([p0, p1, p2, p3, p4, p5, p6, p7],#, ],
-    #[r'Nektar++: Stagnation Inflow bc',
-    [r'Experiment, 0\% Tu',
-    r'Michelassi et al. 2014, 0\% Tu',
-    r'Michelassi et al. 2014, 1.2\% Tu',
-    r'Michelassi et al. 2014, 3.2\% Tu',
-    r'Garai et al. 2016, 0\% Tu',
-    r'Garai et al. 2016, 2\% Tu',
-    r'Present, 0\% Tu',
-    r'Present, 3.2\% Tu'],
-    #r'Present, 7.8\% Tu'],
+    plt.legend([p0, p1, p2, p3, p4, p5, p6, p7,p8, p9],
+    [
+     r'Experiment, 0\% Tu',
+     r'Michelassi et al. 2014, 0\% Tu',
+     r'Michelassi et al. 2014, 1.2\% Tu',
+     r'Michelassi et al. 2014, 3.2\% Tu',
+     r'Garai et al. 2016, 0\% Tu',
+     r'Garai et al. 2016, 2\% Tu',
+     r'Present, 0\% Tu',
+     r'Present, 1.2\% Tu',
+     r'Present, 2\% Tu',
+     r'Present, 3.2\% Tu',
+    ],
     loc='best')
 
     plt.tick_params(reset=True, direction="in", which='both')

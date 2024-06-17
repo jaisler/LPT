@@ -3,8 +3,9 @@
 
 # Path 
 #path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
-path: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM7TI32_3/post' 
-#path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgTIM6Forc/post' 
+#path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI12/post' 
+#path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI2/post' 
+path: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
 pathExp: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpCf: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpLoss: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
@@ -84,7 +85,7 @@ Py: 0.799
 # Axial chord
 Cax: 0.859
 # Dynamic viscosity
-mu: [2.71003e-05,2.71003e-05,2.71003e-05] #2.69906e-05 #2.68456e-05, 2.72109e-05   
+mu: [2.71003e-05,2.71003e-05,2.71003e-05,2.71003e-05] #2.69906e-05 #2.68456e-05, 2.72109e-05   
 # pinf
 pInf: 12.0965 # Pa
 # rhoInf
@@ -105,7 +106,7 @@ Lz: 0.1
 dzplus: 0.0027777776666666667 #0.0083333333
 dyplus: 3.236666666666667e-05 #0.971e-4
 # Shift position
-# wake loss = 200, tau = 20
+# wake loss = 202, tau = 12
 shift: 12
 # Shift for tke
-shiftTKE: -0.68
+shiftTKE: -0.72
