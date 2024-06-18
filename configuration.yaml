@@ -2,16 +2,20 @@
 # All paths are to be given without final slash.
 
 # Path 
-#path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
-#path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI12/post' 
-#path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI2/post' 
-path: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
+path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
+path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI12/post' 
+path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI2/post' 
+path3: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
+pathTKE: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
 pathExp: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpCf: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpLoss: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpTau: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpTKE: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
-nfiles: 1 # how many compressible flow folders we have?
+nfiles: 4 # how many compressible flow folders we have?
+nfilesTKEdns: 3 
+
+#Experiments nfiles
 nfilesCp: 4
 nfilesCf: 1
 nfilesLoss: 6
@@ -97,16 +101,18 @@ R: 12.0965
 # Exit isentropic Mach number
 Mach2is: 0.407
 # ymin for wake loss
-yminLoss: 1.79131
+yminLoss: -1.79131
 # ymin for tau 
-yminTau: 1.378
+yminTau: -1.378
+# yminTauExp
+yminTkeExp: -0.702381
 # Lz
 Lz: 0.1
 # At P=3
 dzplus: 0.0027777776666666667 #0.0083333333
 dyplus: 3.236666666666667e-05 #0.971e-4
 # Shift position
-# wake loss = 202, tau = 12
-shift: 12
-# Shift for tke
-shiftTKE: -0.72
+# wake loss = 202, tau = 12, tke = 5
+shiftLoss: 202
+shiftTau: 12
+shiftTke: 74

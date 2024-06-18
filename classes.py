@@ -69,13 +69,13 @@ class DataTKE:
         """ Extract data from a .csv file 
             to calculate the Power Density Spectra """
 
-        self.y = []
         self.rho = []
         self.u = []
         self.v = []
         self.w = []
         self.p = []
         self.umag = []
+        self.y = []
         self.tau = []
         self.tke = []
         self.prod = []
@@ -84,8 +84,14 @@ class DataTKE:
         self.t = []
         self.dt = []
         df = []
-        for i in range(params['nfileTKE']):
-            df.append(pd.read_csv(params['path'] + '/'
+
+        # Define the size of the tau array
+        qunt = params['qunt']
+        tau = np.zeros((qunt*params['nfilesTKEdns'], params['npointsy'])) # tau11: 0, tau22: 1, tau33: 2, tau12: 3
+
+        for i in range(params['nfilesTKEdns']): 
+
+            df.append(pd.read_csv(params['path'+ str(i+1)] + '/'
                 + params['fileTKE'] + '.csv',
                 delimiter=',',))
 
@@ -145,29 +151,27 @@ class DataTKE:
             wmf /= (tn * rhom)
 
             # Calculate the Reynolds Stresses for compressible flow
-            qunt = params['qunt']
             taumz = np.zeros((qunt, params['npointsy']))
             for j in range(params['npointsz']): # z
-                tau = np.zeros((qunt, params['npointsy'])) # tau11: 0, tau22: 1, tau33: 2, tau12: 3
                 tn = 0
                 l = 0
                 while(l < len(self.u[i])): # time
                     for k in range(params['npointsy']): # y
-                        tau[0][k] += (self.rho[i][j + k * params['npointsz'] + l] 
+                        tau[0+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l] 
                                    * (self.u[i][j + k * params['npointsz'] + l] - umf[k])**2)
-                        tau[1][k] += (self.rho[i][j + k * params['npointsz'] + l]  
+                        tau[1+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l]  
                                    * (self.v[i][j + k * params['npointsz'] + l] - vmf[k])**2)
-                        tau[2][k] += (self.rho[i][j + k * params['npointsz'] + l]  
+                        tau[2+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l]  
                                    * (self.w[i][j + k * params['npointsz'] + l] - wmf[k])**2)
-                        tau[3][k] += (self.rho[i][j + k * params['npointsz'] + l] 
+                        tau[3+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l] 
                                    * (self.u[i][j + k * params['npointsz'] + l] - umf[k]) 
                                    * (self.v[i][j + k * params['npointsz'] + l] - vmf[k]))
                     l += params['npointsy'] * params['npointsz']          
                     tn += 1
 
                 for l in range(qunt):
-                    tau[l] /= tn 
-                    taumz[l] += tau[l]
+                    tau[l+4*i] /= tn 
+                    taumz[l] += tau[l+4*i]
 
             for i in range(qunt):
                 taumz[i] /= params['npointsz'] 
@@ -595,7 +599,7 @@ class DataExpTKE:
         self.tke = []
         self.npoints = []
         for i in range(params['nfilesTKE']):
-            self.y.append(df[i]['y'] + params['shiftTKE'])
+            self.y.append(df[i]['y'])
             self.tke.append(df[i]['tke'])
             self.npoints.append(len(df[i]['y']))
             

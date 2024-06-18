@@ -11,7 +11,7 @@ with open(r'configuration.yaml') as file:
     params = yaml.load(file, Loader=yaml.FullLoader)
 
 if (params['routine']['tke']):
-    # Literature
+    # Literature: Experiments and DNS
     objExpTau = DataExpTau(params)
     objExpTKE = DataExpTKE(params)
     yexptau = objExpTau.GetY()
@@ -28,14 +28,18 @@ if (params['routine']['tke']):
 
     # Reynolds Stresses
     ystar = fc.norm_position(y, params['yminTau'], params['Py'], params)
-    (tauShift, ystarShift) = fc.shift_data(tau, ystar, params)
+    (tauShift, ystarShift) = fc.shift_data(tau, ystar, params['shiftTau'])
     ystarFlip = fc.flip_data(ystarShift, params)
-    pl.plot_tau(ystarFlip,tauShift,yexptau,tauexp,params)
+    pl.plot_tau(ystarFlip,tauShift,yexptau,tauexp,params['pathTKE'])
+    
     # TKE
-    #(tkeShift, yShift) = fc.shift_data(tke, y, params)
-    pl.plot_tke(y,tke,yexptke,tkeexp,params)
+    yexptkestar = fc.norm_position(yexptke, params['yminTkeExp'], params['Py'], params)
+    ystar = fc.norm_position(y, params['yminTau'], params['Py'], params)
+    (tkeShift, ystarShift) = fc.shift_data(tke, ystar, params['shiftTke'])
+    pl.plot_tke(ystarShift,tkeShift,yexptkestar,tkeexp,params['pathTKE'])
+    
     # Trubulence intensity Tu
-    pl.plot_Tu(y,Tu,params)
+    pl.plot_Tu(y,Tu,params['pathTKE'])
 
     del objTKE
 
@@ -247,7 +251,7 @@ if (params['routine']['phisical']):
     xexp = objExpLoss.GetX()
     lossexp = objExpLoss.GetLoss()
 
-    (lossShift, ystarShift) = fc.shift_data(loss, ystar, params)
+    (lossShift, ystarShift) = fc.shift_data(loss, ystar, params['shiftLoss'])
     ystarFlip = fc.flip_data(ystarShift, params)
 
     # Plot wake loss

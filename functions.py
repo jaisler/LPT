@@ -110,11 +110,11 @@ def wake_loss(p, rhoe, ue, ve, we, uM, P1, P2, npoints, params):
 
     return (loss)
 
-def shift_data(u, y, params):
+def shift_data(u, y, shiftPar):
     """ Calculate shift for data """
     shift = []
     for i in range(len(u)):
-        shift.append(params['shift'])
+        shift.append(shiftPar)
     uShift = []
     yeShift = []
     for j in range(len(u)):
@@ -152,7 +152,7 @@ def norm_position(y, ymin, Py, params):
     """ Calculate the correct position and then normalise the data """   
     ystar = []
     for j in range(len(y)):
-        ystar.append((y[j] + ymin) / Py)
+        ystar.append((y[j] - ymin) / Py)
     return (ystar)
 
 
