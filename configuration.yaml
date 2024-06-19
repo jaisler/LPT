@@ -34,14 +34,14 @@ fileI: 'inlet'
 fileO: 'exit'
 filehist: 'hpoint'
 filePSDUp: 'hpointUp'
-fileTKE: 'TKE_down' #TKE_up 
+fileTKE: 'TKE_up' #TKE_down 
 
 # Routines
 routine:
   phisical: False
   correlation: False
-  psd: False
-  tke: True
+  psd: True
+  tke: False
 
 # blade
 nfileBlade: 16
@@ -68,7 +68,7 @@ psdloc: 16 # location in the .his file (data)
 psdNpoints: 16 # number of points in the psd file
 
 # PSD data upstream
-nfilepsdUp: 3 # number of psd files 
+nfilepsdUp: 5 # number of psd files 
 psdlocUp: 8 # location in the .his file (data)
 psdNpointsUp: 8 # number of points in the psd file
 

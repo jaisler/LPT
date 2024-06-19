@@ -12,11 +12,13 @@ def plot_Tu(y,Tu,path):
     p1, = plt.plot(Tu[1], y[0], '-', color='red', linewidth=3)	
     p2, = plt.plot(Tu[2], y[0], '-', color='darkred', linewidth=3)	
 
-    #plt.legend([p0],
-    #[
-    # r'Tu',
-    # ],
-    #loc='best')
+    plt.legend([p0,p1,p2],
+    [
+      r'Present, 1.2\% Tu',
+      r'Present, 2\% Tu',
+      r'Present, 3.2\% Tu',
+    ],
+    loc='best')
 
     plt.tick_params(reset=True, direction="in", which='both')
     plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='major')
@@ -147,8 +149,8 @@ def plot_psd_velocity(f,S,params):
     plt.yticks(fontsize = 20)
     plt.xlabel(r'$f C / U_{\infty}$',fontsize = 18)
     plt.ylabel(r'$PSD(u)$ $[dB]$',fontsize = 18)
-    fig.savefig(params['path'] + '/psdu.pdf', format='PDF')
-    fig.savefig(params['path'] + '/psdu.png', format='png')
+    fig.savefig(params['path'+str(params['nfiles']-1)] + '/psdu.pdf', format='PDF')
+    fig.savefig(params['path'+str(params['nfiles']-1)] + '/psdu.png', format='png')
     plt.show()
 
 def plot_psd_velocity_upstream(f,S,params):
@@ -158,19 +160,21 @@ def plot_psd_velocity_upstream(f,S,params):
 
     npsd = params['nfilepsdUp']
 
-    p0, = plt.semilogx(f[npsd-3], S[npsd-3], '-', color='darkorange', linewidth=3)	
-    p1, = plt.semilogx(f[npsd-2], S[npsd-2], '-', color='red', linewidth=3)	
-    p2, = plt.semilogx(f[npsd-1], S[npsd-1], '-', color='darkred', linewidth=3)	
+    p0, = plt.semilogx(f[npsd-4], S[npsd-4], '-', color='darkorange', linewidth=3)	
+    p1, = plt.semilogx(f[npsd-3], S[npsd-3], '-', color='orangered', linewidth=3)	
+    p2, = plt.semilogx(f[npsd-2], S[npsd-2], '-', color='red', linewidth=3)	
+    p3, = plt.semilogx(f[npsd-1], S[npsd-1], '-', color='darkred', linewidth=3)	
 
     # -5/3 power law
     x0=0.3e1
     x1=2e2
     x = np.linspace(x0, x1)
     y = -(5/3)*10*np.log10(x) - (5/3)*10*np.log10(200) 
-    p3, = plt.semilogx(x, y, '--', color='k')
+    p4, = plt.semilogx(x, y, '--', color='k')
 
-    plt.legend([p0,p1,p2,p3],
-    [r'$-0.3C$',
+    plt.legend([p0,p1,p2,p3,p4],
+    [r'$-0.325C$',
+     r'$-0.3C$',
      r'$-0.2C$',
      r'$-0.1C$',
      r'$f^{-5/3}$'],
@@ -185,8 +189,8 @@ def plot_psd_velocity_upstream(f,S,params):
     plt.yticks(fontsize = 20)
     plt.xlabel(r'$f C / U_{\infty}$',fontsize = 18)
     plt.ylabel(r'$PSD(u)$ $[dB]$',fontsize = 18)
-    fig.savefig(params['path'] + '/psdu.pdf', format='PDF')
-    fig.savefig(params['path'] + '/psdu.png', format='png')
+    fig.savefig(params['path'+str(params['nfiles']-1)] + '/psdu.pdf', format='PDF')
+    fig.savefig(params['path'+str(params['nfiles']-1)] + '/psdu.png', format='png')
     plt.show()
 
 def plot_tpcorr(z, R, path):

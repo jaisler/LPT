@@ -177,8 +177,8 @@ class DataTKE:
                 taumz[i] /= params['npointsz'] 
                 self.tau.append(taumz[i]) # Reynolds stresses
                 # Obtain y range based on the mesh
-                self.y.append(np.linspace(-1.378, -0.581, 80))
-                #self.y.append(np.linspace(-0.647, 0.151, 80))
+                #self.y.append(np.linspace(-1.378, -0.581, 80))
+                self.y.append(np.linspace(-0.647, 0.151, 80))
 
 
             # Calculate the TKE for compressible flow. 
@@ -350,7 +350,7 @@ class DataPSD:
         self.dt = []
         df = []
         for i in range(params['nfilepsd']):
-            df.append(pd.read_csv(params['path'] + '/'
+            df.append(pd.read_csv(params['path'+str(params['nfiles']-1)] + '/'
                 + params['filehist'] + str(i) + '.csv',
                 delimiter=',',
                 skiprows=[j for j in range(1, params['psdloc'])]))
@@ -394,7 +394,7 @@ class DataPSDUpstream:
         self.dt = []
         df = []
         for i in range(params['nfilepsdUp']):
-            df.append(pd.read_csv(params['path'] + '/'
+            df.append(pd.read_csv(params['path'+str(params['nfiles']-1)] + '/'
                 + params['filePSDUp'] + str(i) + '.csv',
                 delimiter=',',
                 skiprows=[j for j in range(1, params['psdlocUp'])]))
