@@ -69,13 +69,13 @@ class DataTKE:
         """ Extract data from a .csv file 
             to calculate the Power Density Spectra """
 
-        self.y = []
         self.rho = []
         self.u = []
         self.v = []
         self.w = []
         self.p = []
         self.umag = []
+        self.y = []
         self.tau = []
         self.tke = []
         self.prod = []
@@ -84,8 +84,14 @@ class DataTKE:
         self.t = []
         self.dt = []
         df = []
-        for i in range(params['nfileTKE']):
-            df.append(pd.read_csv(params['path'] + '/'
+
+        # Define the size of the tau array
+        qunt = params['qunt']
+        tau = np.zeros((qunt*params['nfilesTKEdns'], params['npointsy'])) # tau11: 0, tau22: 1, tau33: 2, tau12: 3
+
+        for i in range(params['nfilesTKEdns']): 
+
+            df.append(pd.read_csv(params['path'+ str(i+1)] + '/'
                 + params['fileTKE'] + '.csv',
                 delimiter=',',))
 
@@ -106,7 +112,7 @@ class DataTKE:
             while(l < len(self.u[i])):
                 for k in range(params['npointsy']):
                     rhoAvgZ = 0
-                    for j in range(params['npointsz']):
+                    for j in range(params['npointsz']): # params['npointsz']
                         rhoAvgZ += self.rho[i][j + k * params['npointsz'] + l]
                     # Obtain the average in z-direction
                     rhoAvgZ = rhoAvgZ / params['npointsz']
@@ -127,7 +133,7 @@ class DataTKE:
                     uAvgZ = 0
                     vAvgZ = 0
                     wAvgZ = 0
-                    for j in range(params['npointsz']):
+                    for j in range(params['npointsz']): #params['npointsz']
                         uAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
                                   * self.u[i][j + k * params['npointsz'] + l]) 
                         vAvgZ += (self.rho[i][j + k * params['npointsz'] + l] 
@@ -145,33 +151,36 @@ class DataTKE:
             wmf /= (tn * rhom)
 
             # Calculate the Reynolds Stresses for compressible flow
-            qunt = params['qunt']
             taumz = np.zeros((qunt, params['npointsy']))
             for j in range(params['npointsz']): # z
-                tau = np.zeros((qunt, params['npointsy'])) # tau11: 0, tau22: 1, tau33: 2, tau12: 3
                 tn = 0
                 l = 0
                 while(l < len(self.u[i])): # time
                     for k in range(params['npointsy']): # y
-                        tau[0][k] += (self.rho[i][j + k * params['npointsz'] + l] 
+                        tau[0+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l] 
                                    * (self.u[i][j + k * params['npointsz'] + l] - umf[k])**2)
-                        tau[1][k] += (self.rho[i][j + k * params['npointsz'] + l]  
+                        tau[1+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l]  
                                    * (self.v[i][j + k * params['npointsz'] + l] - vmf[k])**2)
-                        tau[2][k] += (self.rho[i][j + k * params['npointsz'] + l]  
+                        tau[2+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l]  
                                    * (self.w[i][j + k * params['npointsz'] + l] - wmf[k])**2)
-                        tau[3][k] += (self.rho[i][j + k * params['npointsz'] + l] 
+                        tau[3+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l] 
                                    * (self.u[i][j + k * params['npointsz'] + l] - umf[k]) 
                                    * (self.v[i][j + k * params['npointsz'] + l] - vmf[k]))
                     l += params['npointsy'] * params['npointsz']          
                     tn += 1
 
                 for l in range(qunt):
-                    tau[l] /= tn 
-                    taumz[l] += tau[l]
+                    tau[l+4*i] /= tn 
+                    taumz[l] += tau[l+4*i]
 
             for i in range(qunt):
                 taumz[i] /= params['npointsz'] 
                 self.tau.append(taumz[i]) # Reynolds stresses
+                # Obtain y range based on the mesh
+                self.y.append(np.linspace(-1.451, -0.676, 80))
+                #self.y.append(np.linspace(-1.378, -0.581, 80))
+                #self.y.append(np.linspace(-0.647, 0.151, 80))
+
 
             # Calculate the TKE for compressible flow. 
             # tke is divided by rhom due to Favre average.
@@ -182,10 +191,6 @@ class DataTKE:
                            / params['Mach2is']))
             #self.prod.append(prod)
             #self.diss.append(diss)
-
-            # Obtain y range based on the mesh
-            #self.y = np.linspace(-1.378, -0.581, 80)
-            self.y = np.linspace(-0.647, 0.151, 80)
 
     def GetTau(self):
         return self.tau
@@ -346,7 +351,7 @@ class DataPSD:
         self.dt = []
         df = []
         for i in range(params['nfilepsd']):
-            df.append(pd.read_csv(params['path'] + '/'
+            df.append(pd.read_csv(params['path'+str(params['nfiles']-1)] + '/'
                 + params['filehist'] + str(i) + '.csv',
                 delimiter=',',
                 skiprows=[j for j in range(1, params['psdloc'])]))
@@ -390,7 +395,7 @@ class DataPSDUpstream:
         self.dt = []
         df = []
         for i in range(params['nfilepsdUp']):
-            df.append(pd.read_csv(params['path'] + '/'
+            df.append(pd.read_csv(params['path'+str(params['nfiles']-1)] + '/'
                 + params['filePSDUp'] + str(i) + '.csv',
                 delimiter=',',
                 skiprows=[j for j in range(1, params['psdlocUp'])]))
@@ -557,4 +562,53 @@ class DataExpLoss:
 
     def GetNpoints(self):
         return self.npoints
+    
+class DataExpTau:
+    def __init__(self, params):
+        """ Initialisation of the data from .csv files. """
+        df = []
+        for i in range(params['nfilesTau']):
+            df.append(pd.read_csv(params['pathExpTau'] + '/' 
+                + params['fileETau'] + str(i) +'.csv', delimiter=','))
+            
+        self.y = [] 
+        self.tau = []
+        self.npoints = []
+        for i in range(params['nfilesTau']):
+            self.y.append(df[i]['y'])
+            self.tau.append(df[i]['tau'])
+            self.npoints.append(len(df[i]['y']))
+            
+    def GetY(self):       
+        return self.y
 
+    def GetTau(self):
+        return self.tau
+
+    def GetNpoints(self):
+        return self.npoints
+    
+class DataExpTKE:
+    def __init__(self, params):
+        """ Initialisation of the data from .csv files. """
+        df = []
+        for i in range(params['nfilesTKEexp']):
+            df.append(pd.read_csv(params['pathExpTKE'] + '/' 
+                + params['fileETKE'] + str(i) +'.csv', delimiter=','))
+            
+        self.y = [] 
+        self.tke = []
+        self.npoints = []
+        for i in range(params['nfilesTKEexp']):
+            self.y.append(df[i]['y'])
+            self.tke.append(df[i]['tke'])
+            self.npoints.append(len(df[i]['y']))
+            
+    def GetY(self):       
+        return self.y
+
+    def GetTKE(self):
+        return self.tke
+
+    def GetNpoints(self):
+        return self.npoints

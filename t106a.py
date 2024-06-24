@@ -11,15 +11,35 @@ with open(r'configuration.yaml') as file:
     params = yaml.load(file, Loader=yaml.FullLoader)
 
 if (params['routine']['tke']):
+    # Literature: Experiments and DNS
+    objExpTau = DataExpTau(params)
+    objExpTKE = DataExpTKE(params)
+    yexptau = objExpTau.GetY()
+    tauexp = objExpTau.GetTau()
+    yexptke = objExpTKE.GetY()
+    tkeexp = objExpTKE.GetTKE()
+
+    # Nektar++
     objTKE = DataTKE(params)
     tau = objTKE.GetTau()
     tke = objTKE.GetTKE()
     Tu = objTKE.GetTu()
     y = objTKE.GetY()
+
+    # Reynolds Stresses
+    ystar = fc.norm_position(y, params['yminTau'], params['Py'], params)
+    (tauShift, ystarShift) = fc.shift_data(tau, ystar, params['shiftTau'])
+    ystarFlip = fc.flip_data(ystarShift, params)
+    pl.plot_tau(ystarFlip,tauShift,yexptau,tauexp,params['pathTKE'])
     
-    pl.plot_tau(y,tau,params)
-    pl.plot_tke(y,tke,params)
-    pl.plot_Tu(y,Tu,params)
+    # TKE
+    yexptkestar = fc.norm_position(yexptke, params['yminTkeExp'], params['Py'], params)
+    ystar = fc.norm_position(y, params['yminTau'], params['Py'], params)
+    (tkeShift, ystarShift) = fc.shift_data(tke, ystar, params['shiftTke'])
+    pl.plot_tke(ystarShift,tkeShift,yexptkestar,tkeexp,params['pathTKE'])
+    
+    # Trubulence intensity Tu
+    pl.plot_Tu(y,Tu,params['pathTKE'])
 
     del objTKE
 
@@ -223,7 +243,7 @@ if (params['routine']['phisical']):
     ye = objExit.GetY() 
     npoints = objExit.GetNpoints()
     loss = fc.wake_loss(pe, rhoe, ue, ve, we, uM, P1, P2, npoints, params)
-    ystar = fc.wake_loss_position(ye, params['ymin'], params['Py'], params)
+    ystar = fc.norm_position(ye, params['yminLoss'], params['Py'], params)
 
     # Exp
     objExpLoss = DataExpLoss(params) # Experimental data
@@ -231,8 +251,8 @@ if (params['routine']['phisical']):
     xexp = objExpLoss.GetX()
     lossexp = objExpLoss.GetLoss()
 
-    (lossShift, ystarShift) = fc.wake_loss_shift(loss, ystar, params)
-    (lossFlip, ystarFlip) = fc.wake_loss_flip(lossShift, ystarShift, params)
+    (lossShift, ystarShift) = fc.shift_data(loss, ystar, params['shiftLoss'])
+    ystarFlip = fc.flip_data(ystarShift, params)
 
     # Plot wake loss
-    pl.plot_wake_loss(ystarFlip, lossFlip, xexp, lossexp, params['path0'])
+    pl.plot_wake_loss(ystarFlip, lossShift, xexp, lossexp, params['path0'])

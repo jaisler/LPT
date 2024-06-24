@@ -3,18 +3,25 @@ import matplotlib.pyplot as plt
 from matplotlib import rc, cm
 rc('text', usetex=True)
 
-def plot_Tu(y,Tu,params):
+def plot_Tu(y,Tu,path):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    p0, = plt.plot(Tu[0], y, '-', color='darkorange', linewidth=3)	
+    #p0, = plt.plot(Tu[0], y[0], '-', color='orangered', linewidth=3)	
+    #p1, = plt.plot(Tu[1], y[0], '-', color='red', linewidth=3)	
+    #p2, = plt.plot(Tu[2], y[0], '-', color='darkred', linewidth=3)	
+    p3, = plt.plot(Tu[0], y[0], '-', color='darkred', linewidth=3)	
 
-    #plt.legend([p0],
-    #[
-    # r'Tu',
-    # ],
-    #loc='best')
+
+    plt.legend([p3],
+    [
+      #r'Present, 1.2\% Tu',
+      #r'Present, 2\% Tu',
+      #r'Present, 3.2\% Tu',
+      r'Present, 3.8\% Tu',
+    ],
+    loc='best')
 
     plt.tick_params(reset=True, direction="in", which='both')
     plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='major')
@@ -25,26 +32,38 @@ def plot_Tu(y,Tu,params):
     plt.yticks(fontsize = 20)
     plt.xlabel(r'Tu [$\%$]',fontsize = 18)
     plt.ylabel(r'$y$',fontsize = 18)
-    fig.savefig(params['path'] + '/Tu.pdf', format='PDF')
-    fig.savefig(params['path'] + '/Tu.png', format='png')
+    fig.savefig(path + '/Tu.pdf', format='PDF')
+    fig.savefig(path + '/Tu.png', format='png')
     plt.show()
 
-def plot_tau(y,tau,params):
+def plot_tau(y,tau,yexp,tauexp,path):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    p0, = plt.plot(tau[0], y, '-', color='darkorange', linewidth=3)	
-    p1, = plt.plot(tau[1], y, '-', color='red', linewidth=3)	
-    p2, = plt.plot(tau[2], y, '-', color='crimson', linewidth=3)	
-    p3, = plt.plot(tau[3], y, '-', color='darkred', linewidth=3)	
+    a = [0.0]
+    b = [0.0]
 
-    plt.legend([p0,p1,p2,p3],
+    # Nektar++
+    p0, = plt.plot(tau[0], y[0], '-', color='darkorange', linewidth=3)	
+    p1, = plt.plot(tau[1], y[0], '-', color='red', linewidth=3)	
+    p2, = plt.plot(tau[2], y[0], '-', color='crimson', linewidth=3)	
+    p3, = plt.plot(tau[3], y[0], '-', color='darkred', linewidth=3)	
+    # Exp
+    plt.plot(tauexp[0], yexp[0], ':', color='darkorange', linewidth=3)	
+    plt.plot(tauexp[1], yexp[1], ':', color='red', linewidth=3)	
+    plt.plot(tauexp[2], yexp[2], ':', color='crimson', linewidth=3)	
+    plt.plot(tauexp[3], yexp[3], ':', color='darkred', linewidth=3)	
+    # Point
+    p4, = plt.plot(a, b, ':', color='k', linewidth=3)	
+     
+    plt.legend([p4,p0,p1,p2,p3],
     [
-     r'$\tau_{11}$',
-     r'$\tau_{22}$',
-     r'$\tau_{33}$',
-     r'$\tau_{12}$',
+     r'Sandberg $\&$ Michelassi 2019, 3.8\% Tu',
+     r'$\tau_{11}$, 3.8\% Tu',
+     r'$\tau_{22}$, 3.8\% Tu',
+     r'$\tau_{33}$, 3.8\% Tu',
+     r'$\tau_{12}$, 3.8\% Tu',
      ],
     loc='best')
 
@@ -56,20 +75,30 @@ def plot_tau(y,tau,params):
     plt.xticks(fontsize = 20)
     plt.yticks(fontsize = 20)
     plt.xlabel(r'$\tau_{ij}$',fontsize = 18)
-    plt.ylabel(r'$y$',fontsize = 18)
-    fig.savefig(params['path'] + '/tau.pdf', format='PDF')
-    fig.savefig(params['path'] + '/tau.png', format='png')
+    plt.ylabel(r'$y^{*}/P_{y}$',fontsize = 18)
+    fig.savefig(path + '/tau.pdf', format='PDF')
+    fig.savefig(path + '/tau.png', format='png')
     plt.show()
 
-def plot_tke(y,tke,params):
+def plot_tke(y,tke,yexp,tkeexp,path):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    p0, = plt.plot(tke[0], y, '-', color='darkorange', linewidth=3)	
+    #p1, = plt.plot(tke[0], y[0], '-', color='orangered', linewidth=3)	
+    #p2, = plt.plot(tke[1], y[0], '-', color='red', linewidth=3)	
+    #p3, = plt.plot(tke[2], y[0], '-', color='darkred', linewidth=3)	
+    p4, = plt.plot(tke[0], y[0], '-', color='darkred', linewidth=3)	
+    p0, = plt.plot(tkeexp[0], yexp[0], ':', color='k', linewidth=3)	
 
-    plt.legend([p0],
-    [r'TKE'],
+    plt.legend([p0,p4],
+    [
+      r'Sandberg $\&$ Michelassi 2019, 3.8\% Tu',
+      #r'Present, 1.2\% Tu',
+      #r'Present, 2\% Tu',
+      #r'Present, 3.2\% Tu',
+      r'Present, 3.8\% Tu',
+    ],
     loc='best')
 
     plt.tick_params(reset=True, direction="in", which='both')
@@ -80,9 +109,9 @@ def plot_tke(y,tke,params):
     plt.xticks(fontsize = 20)
     plt.yticks(fontsize = 20)
     plt.xlabel(r'$TKE$',fontsize = 18)
-    plt.ylabel(r'$y$',fontsize = 18)
-    fig.savefig(params['path'] + '/tke.pdf', format='PDF')
-    fig.savefig(params['path'] + '/tke.png', format='png')
+    plt.ylabel(r'$y^{*}/P_{y}$',fontsize = 18)
+    fig.savefig(path + '/tke.pdf', format='PDF')
+    fig.savefig(path + '/tke.png', format='png')
     plt.show()
 
 def plot_psd_velocity(f,S,params):
@@ -125,8 +154,8 @@ def plot_psd_velocity(f,S,params):
     plt.yticks(fontsize = 20)
     plt.xlabel(r'$f C / U_{\infty}$',fontsize = 18)
     plt.ylabel(r'$PSD(u)$ $[dB]$',fontsize = 18)
-    fig.savefig(params['path'] + '/psdu.pdf', format='PDF')
-    fig.savefig(params['path'] + '/psdu.png', format='png')
+    fig.savefig(params['path'+str(params['nfiles']-1)] + '/psdu.pdf', format='PDF')
+    fig.savefig(params['path'+str(params['nfiles']-1)] + '/psdu.png', format='png')
     plt.show()
 
 def plot_psd_velocity_upstream(f,S,params):
@@ -136,19 +165,21 @@ def plot_psd_velocity_upstream(f,S,params):
 
     npsd = params['nfilepsdUp']
 
-    p0, = plt.semilogx(f[npsd-3], S[npsd-3], '-', color='darkorange', linewidth=3)	
-    p1, = plt.semilogx(f[npsd-2], S[npsd-2], '-', color='red', linewidth=3)	
-    p2, = plt.semilogx(f[npsd-1], S[npsd-1], '-', color='darkred', linewidth=3)	
+    p0, = plt.semilogx(f[npsd-4], S[npsd-4], '-', color='darkorange', linewidth=3)	
+    p1, = plt.semilogx(f[npsd-3], S[npsd-3], '-', color='orangered', linewidth=3)	
+    p2, = plt.semilogx(f[npsd-2], S[npsd-2], '-', color='red', linewidth=3)	
+    p3, = plt.semilogx(f[npsd-1], S[npsd-1], '-', color='darkred', linewidth=3)	
 
     # -5/3 power law
     x0=0.3e1
     x1=2e2
     x = np.linspace(x0, x1)
     y = -(5/3)*10*np.log10(x) - (5/3)*10*np.log10(200) 
-    p3, = plt.semilogx(x, y, '--', color='k')
+    p4, = plt.semilogx(x, y, '--', color='k')
 
-    plt.legend([p0,p1,p2,p3],
-    [r'$-0.3C$',
+    plt.legend([p0,p1,p2,p3,p4],
+    [r'$-0.325C$',
+     r'$-0.3C$',
      r'$-0.2C$',
      r'$-0.1C$',
      r'$f^{-5/3}$'],
@@ -163,8 +194,8 @@ def plot_psd_velocity_upstream(f,S,params):
     plt.yticks(fontsize = 20)
     plt.xlabel(r'$f C / U_{\infty}$',fontsize = 18)
     plt.ylabel(r'$PSD(u)$ $[dB]$',fontsize = 18)
-    fig.savefig(params['path'] + '/psdu.pdf', format='PDF')
-    fig.savefig(params['path'] + '/psdu.png', format='png')
+    fig.savefig(params['path'+str(params['nfiles']-1)] + '/psdu.pdf', format='PDF')
+    fig.savefig(params['path'+str(params['nfiles']-1)] + '/psdu.png', format='png')
     plt.show()
 
 def plot_tpcorr(z, R, path):
@@ -202,19 +233,26 @@ def plot_cp(x, cp, xe, cpe, path):
     plt.rc('legend',**{'fontsize':12})
 
     p0, = plt.plot(xe[0], cpe[0], 'o', color='none', markeredgecolor='k', markersize=13)	
-    p1, = plt.plot(xe[1], cpe[1], ':', color='gold', linewidth=2)	
+    #p1, = plt.plot(xe[1], cpe[1], ':', color='gold', linewidth=2)	
     p2, = plt.plot(xe[2], cpe[2], '--', color='b', linewidth=2)	
     p3, = plt.plot(xe[3], cpe[3], '--', color='purple', linewidth=2)	
-    p4, = plt.plot(x[0], cp[0], '-', color='red', linewidth=2)	
-    p5, = plt.plot(x[1], cp[1], '-', color='darkorange', linewidth=2)	
+    p4, = plt.plot(x[0], cp[0], '-', color='darkorange', linewidth=2)	
+    p5, = plt.plot(x[1], cp[1], '-', color='orangered', linewidth=2)	
+    p6, = plt.plot(x[2], cp[2], '-', color='red', linewidth=2)	
+    p7, = plt.plot(x[3], cp[3], '-', color='darkred', linewidth=2)	
 
-    plt.legend([p0, p1, p2, p3, p4, p5],
-    [r'Experiment, 0\% Tu', 
-     r'Wissink et al. 2003, 0\% Tu',
+
+    plt.legend([p0, p2, p3, p4, p5, p6, p7],
+    [
+     r'Experiment, 0\% Tu', 
+     #r'Wissink et al. 2003, 0\% Tu',
      r'Michelassi et al. 2014, 0.0\% Tu',
      r'Michelassi et al. 2014, 3.2\% Tu',
      r'Present, 0\% Tu',
-     r'Present, 3.2\% Tu'],
+     r'Present, 1.2\% Tu',
+     r'Present, 2\% Tu',
+     r'Present, 3.2\% Tu',
+    ],
     loc='center')
     
     plt.tick_params(reset=True, direction="in", which='both')
@@ -241,22 +279,25 @@ def plot_cf(x, sh, xe, she, path):
     plt.plot(a, b, ':', color='k')
 
     #p0, = plt.plot(xe[0], she[0], '--', color='purple', linewidth=2)	
-    p0, = plt.plot(x[0], sh[0], '-', color='red', linewidth=2)	
-    p1, = plt.plot(x[1], sh[1], '-', color='darkorange', linewidth=2)	
+    p0, = plt.plot(x[0], sh[0], '-', color='darkorange', linewidth=2)	
+    p1, = plt.plot(x[1], sh[1], '-', color='orangered', linewidth=2)	
+    p2, = plt.plot(x[2], sh[2], '-', color='red', linewidth=2)	
+    p3, = plt.plot(x[3], sh[3], '-', color='darkred', linewidth=2)	
 
-    plt.legend([p0, p1],
-    #[r'Nektar++: Stagnation Inflow bc',
-    #[r'Michelassi et al. 2014, 3.2\% Tu',
-    [r'Present, 0\% Tu',
-    r'Present, 3.2\% Tu'],
-    #r'Present, 7.8\% Tu'],
+    plt.legend([p0, p1, p2, p3],
+    [
+     r'Present, 0\% Tu',
+     r'Present, 1.2\% Tu',
+     r'Present, 2\% Tu',
+     r'Present, 3.2\% Tu',
+     ],
     loc='best')
 
     plt.tick_params(reset=True, direction="in", which='both')
     plt.subplots_adjust(left=0.245, right=0.95, bottom=0.16, top=0.97)
     plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='both')
-    plt.xlim((0.0,1))
-    plt.ylim((-0.01, 0.01))
+    plt.xlim((0.75,1))
+    plt.ylim((-0.001, 0.001))
     plt.xticks(fontsize = 24)
     plt.yticks(fontsize = 24)
     plt.xlabel(r'$x/C_{ax}$',fontsize = 24)
@@ -273,28 +314,31 @@ def plot_wake_loss(x, loss, xe, losse, path):
     p0, = plt.plot(xe[0], losse[0], 'o', color='none', 
                    markeredgecolor='k', markersize=13)	
     p1, = plt.plot(xe[1], losse[1], '--', color='b', linewidth=2)	#0% TI M
-    p2, = plt.plot(xe[3], losse[3], '--', color='m', linewidth=2)	#1.2% TI M
+    #p2, = plt.plot(xe[3], losse[3], '--', color='m', linewidth=2)	#1.2% TI M
     p3, = plt.plot(xe[4], losse[4], '--', color='purple', linewidth=2)	#3.2% TI M
 
-    p4, = plt.plot(xe[2], losse[2], ':', color='g', linewidth=2)  #0% TI G	
-    p5, = plt.plot(xe[5], losse[5], ':', color='springgreen', linewidth=2)  #0% TI G	
+    #p4, = plt.plot(xe[2], losse[2], ':', color='g', linewidth=2)  #0% TI G	
+    #p5, = plt.plot(xe[5], losse[5], ':', color='springgreen', linewidth=2)  #0% TI G	
 
-    p6, = plt.plot(x[0], loss[0], '-', color='red', linewidth=2)	
-    p7, = plt.plot(x[1], loss[1], '-', color='darkorange', linewidth=2)	
-    #p8, = plt.plot(x[2], loss[2], '-', color='darkorange', linewidth=2)	
+    p6, = plt.plot(x[0], loss[0], '-', color='darkorange', linewidth=2)	
+    p7, = plt.plot(x[1], loss[1], '-', color='orangered', linewidth=2)	
+    p8, = plt.plot(x[2], loss[2], '-', color='red', linewidth=2)	
+    p9, = plt.plot(x[3], loss[3], '-', color='darkred', linewidth=2)	
 
 
-    plt.legend([p0, p1, p2, p3, p4, p5, p6, p7],#, ],
-    #[r'Nektar++: Stagnation Inflow bc',
-    [r'Experiment, 0\% Tu',
-    r'Michelassi et al. 2014, 0\% Tu',
-    r'Michelassi et al. 2014, 1.2\% Tu',
-    r'Michelassi et al. 2014, 3.2\% Tu',
-    r'Garai et al. 2016, 0\% Tu',
-    r'Garai et al. 2016, 2\% Tu',
-    r'Present, 0\% Tu',
-    r'Present, 3.2\% Tu'],
-    #r'Present, 7.8\% Tu'],
+    plt.legend([p0, p1, p3, p6, p7,p8, p9],
+    [
+     r'Experiment, 0\% Tu',
+     r'Michelassi et al. 2014, 0\% Tu',
+     #r'Michelassi et al. 2014, 1.2\% Tu',
+     r'Michelassi et al. 2014, 3.2\% Tu',
+     #r'Garai et al. 2016, 0\% Tu',
+     #r'Garai et al. 2016, 2\% Tu',
+     r'Present, 0\% Tu',
+     r'Present, 1.2\% Tu',
+     r'Present, 2\% Tu',
+     r'Present, 3.2\% Tu',
+    ],
     loc='best')
 
     plt.tick_params(reset=True, direction="in", which='both')

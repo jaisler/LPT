@@ -2,35 +2,47 @@
 # All paths are to be given without final slash.
 
 # Path 
-#path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
-path: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM7TI32_3/post' 
-#path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgTIM6Forc/post' 
+path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
+#path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI12/post' 
+#path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI2/post' 
+#path3: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
+path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI38/post' 
+pathTKE: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI38/post' 
 pathExp: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpCf: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpLoss: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
-nfiles: 1 # how many compressible flow folders we have?
+pathExpTau: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
+pathExpTKE: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
+
+#Experiments nfiles
+nfiles: 2 # how many compressible flow folders we have?
+nfilesTKEdns: 1 
+nfilesTKEexp: 1
 nfilesCp: 4
 nfilesCf: 1
 nfilesLoss: 6
+nfilesTau: 4
 
 # File
 fileF: 'wallAvg'
 fileB: 'blade'
 fileE: 'expCp'
 fileECf: 'expCf'
+fileETau: 'expTau'
+fileETKE: 'expTKE'
 fileEL: 'expLoss'
 fileI: 'inlet'
 fileO: 'exit'
 filehist: 'hpoint'
 filePSDUp: 'hpointUp'
-fileTKE: TKE_up
+fileTKE: 'TKE_downf' #TKE_down, TKE_up 
 
 # Routines
 routine:
   phisical: False
   correlation: False
-  psd: True
-  tke: False
+  psd: False
+  tke: True
 
 # blade
 nfileBlade: 16
@@ -42,7 +54,6 @@ nfileExit: 16
 nfileInlet: 16
 
 # TKE 
-nfileTKE: 1 # number of files 
 npointsz: 15
 npointsy: 80
 pfreq: 1
@@ -57,7 +68,7 @@ psdloc: 16 # location in the .his file (data)
 psdNpoints: 16 # number of points in the psd file
 
 # PSD data upstream
-nfilepsdUp: 3 # number of psd files 
+nfilepsdUp: 5 # number of psd files 
 psdlocUp: 8 # location in the .his file (data)
 psdNpointsUp: 8 # number of points in the psd file
 
@@ -78,7 +89,7 @@ Py: 0.799
 # Axial chord
 Cax: 0.859
 # Dynamic viscosity
-mu: [2.71003e-05,2.71003e-05,2.71003e-05] #2.69906e-05 #2.68456e-05, 2.72109e-05   
+mu: [2.71003e-05,2.71003e-05,2.71003e-05,2.71003e-05] #2.69906e-05 #2.68456e-05, 2.72109e-05   
 # pinf
 pInf: 12.0965 # Pa
 # rhoInf
@@ -89,10 +100,19 @@ uInf: 1.0
 R: 12.0965
 # Exit isentropic Mach number
 Mach2is: 0.407
-# ymin
-ymin: 1.79131
+# ymin for wake loss
+yminLoss: -1.79131
+# ymin for tau 
+yminTau: -1.451
+# yminTauExp
+yminTkeExp: -0.702381
 # Lz
 Lz: 0.1
 # At P=3
 dzplus: 0.0027777776666666667 #0.0083333333
 dyplus: 3.236666666666667e-05 #0.971e-4
+# Shift position
+# wake loss = 202, tau = 12, tke = 5
+shiftLoss: 202
+shiftTau: 14
+shiftTke: 74
