@@ -8,15 +8,18 @@ def plot_Tu(y,Tu,path):
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    p0, = plt.plot(Tu[0], y[0], '-', color='orangered', linewidth=3)	
-    p1, = plt.plot(Tu[1], y[0], '-', color='red', linewidth=3)	
-    p2, = plt.plot(Tu[2], y[0], '-', color='darkred', linewidth=3)	
+    #p0, = plt.plot(Tu[0], y[0], '-', color='orangered', linewidth=3)	
+    #p1, = plt.plot(Tu[1], y[0], '-', color='red', linewidth=3)	
+    #p2, = plt.plot(Tu[2], y[0], '-', color='darkred', linewidth=3)	
+    p3, = plt.plot(Tu[0], y[0], '-', color='darkred', linewidth=3)	
 
-    plt.legend([p0,p1,p2],
+
+    plt.legend([p3],
     [
-      r'Present, 1.2\% Tu',
-      r'Present, 2\% Tu',
-      r'Present, 3.2\% Tu',
+      #r'Present, 1.2\% Tu',
+      #r'Present, 2\% Tu',
+      #r'Present, 3.2\% Tu',
+      r'Present, 3.8\% Tu',
     ],
     loc='best')
 
@@ -42,10 +45,10 @@ def plot_tau(y,tau,yexp,tauexp,path):
     b = [0.0]
 
     # Nektar++
-    p0, = plt.plot(tau[8], y[0], '-', color='darkorange', linewidth=3)	
-    p1, = plt.plot(tau[9], y[0], '-', color='red', linewidth=3)	
-    p2, = plt.plot(tau[10], y[0], '-', color='crimson', linewidth=3)	
-    p3, = plt.plot(tau[11], y[0], '-', color='darkred', linewidth=3)	
+    p0, = plt.plot(tau[0], y[0], '-', color='darkorange', linewidth=3)	
+    p1, = plt.plot(tau[1], y[0], '-', color='red', linewidth=3)	
+    p2, = plt.plot(tau[2], y[0], '-', color='crimson', linewidth=3)	
+    p3, = plt.plot(tau[3], y[0], '-', color='darkred', linewidth=3)	
     # Exp
     plt.plot(tauexp[0], yexp[0], ':', color='darkorange', linewidth=3)	
     plt.plot(tauexp[1], yexp[1], ':', color='red', linewidth=3)	
@@ -57,10 +60,10 @@ def plot_tau(y,tau,yexp,tauexp,path):
     plt.legend([p4,p0,p1,p2,p3],
     [
      r'Sandberg $\&$ Michelassi 2019, 3.8\% Tu',
-     r'$\tau_{11}$, 3.2\% Tu',
-     r'$\tau_{22}$, 3.2\% Tu',
-     r'$\tau_{33}$, 3.2\% Tu',
-     r'$\tau_{12}$, 3.2\% Tu',
+     r'$\tau_{11}$, 3.8\% Tu',
+     r'$\tau_{22}$, 3.8\% Tu',
+     r'$\tau_{33}$, 3.8\% Tu',
+     r'$\tau_{12}$, 3.8\% Tu',
      ],
     loc='best')
 
@@ -82,17 +85,19 @@ def plot_tke(y,tke,yexp,tkeexp,path):
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    p1, = plt.plot(tke[0], y[0], '-', color='orangered', linewidth=3)	
-    p2, = plt.plot(tke[1], y[0], '-', color='red', linewidth=3)	
-    p3, = plt.plot(tke[2], y[0], '-', color='darkred', linewidth=3)	
+    #p1, = plt.plot(tke[0], y[0], '-', color='orangered', linewidth=3)	
+    #p2, = plt.plot(tke[1], y[0], '-', color='red', linewidth=3)	
+    #p3, = plt.plot(tke[2], y[0], '-', color='darkred', linewidth=3)	
+    p4, = plt.plot(tke[0], y[0], '-', color='darkred', linewidth=3)	
     p0, = plt.plot(tkeexp[0], yexp[0], ':', color='k', linewidth=3)	
 
-    plt.legend([p0,p1,p2,p3],
+    plt.legend([p0,p4],
     [
       r'Sandberg $\&$ Michelassi 2019, 3.8\% Tu',
-      r'Present, 1.2\% Tu',
-      r'Present, 2\% Tu',
-      r'Present, 3.2\% Tu',
+      #r'Present, 1.2\% Tu',
+      #r'Present, 2\% Tu',
+      #r'Present, 3.2\% Tu',
+      r'Present, 3.8\% Tu',
     ],
     loc='best')
 
@@ -309,11 +314,11 @@ def plot_wake_loss(x, loss, xe, losse, path):
     p0, = plt.plot(xe[0], losse[0], 'o', color='none', 
                    markeredgecolor='k', markersize=13)	
     p1, = plt.plot(xe[1], losse[1], '--', color='b', linewidth=2)	#0% TI M
-    p2, = plt.plot(xe[3], losse[3], '--', color='m', linewidth=2)	#1.2% TI M
+    #p2, = plt.plot(xe[3], losse[3], '--', color='m', linewidth=2)	#1.2% TI M
     p3, = plt.plot(xe[4], losse[4], '--', color='purple', linewidth=2)	#3.2% TI M
 
-    p4, = plt.plot(xe[2], losse[2], ':', color='g', linewidth=2)  #0% TI G	
-    p5, = plt.plot(xe[5], losse[5], ':', color='springgreen', linewidth=2)  #0% TI G	
+    #p4, = plt.plot(xe[2], losse[2], ':', color='g', linewidth=2)  #0% TI G	
+    #p5, = plt.plot(xe[5], losse[5], ':', color='springgreen', linewidth=2)  #0% TI G	
 
     p6, = plt.plot(x[0], loss[0], '-', color='darkorange', linewidth=2)	
     p7, = plt.plot(x[1], loss[1], '-', color='orangered', linewidth=2)	
@@ -321,14 +326,14 @@ def plot_wake_loss(x, loss, xe, losse, path):
     p9, = plt.plot(x[3], loss[3], '-', color='darkred', linewidth=2)	
 
 
-    plt.legend([p0, p1, p2, p3, p4, p5, p6, p7,p8, p9],
+    plt.legend([p0, p1, p3, p6, p7,p8, p9],
     [
      r'Experiment, 0\% Tu',
      r'Michelassi et al. 2014, 0\% Tu',
-     r'Michelassi et al. 2014, 1.2\% Tu',
+     #r'Michelassi et al. 2014, 1.2\% Tu',
      r'Michelassi et al. 2014, 3.2\% Tu',
-     r'Garai et al. 2016, 0\% Tu',
-     r'Garai et al. 2016, 2\% Tu',
+     #r'Garai et al. 2016, 0\% Tu',
+     #r'Garai et al. 2016, 2\% Tu',
      r'Present, 0\% Tu',
      r'Present, 1.2\% Tu',
      r'Present, 2\% Tu',

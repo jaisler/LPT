@@ -177,8 +177,9 @@ class DataTKE:
                 taumz[i] /= params['npointsz'] 
                 self.tau.append(taumz[i]) # Reynolds stresses
                 # Obtain y range based on the mesh
+                self.y.append(np.linspace(-1.451, -0.676, 80))
                 #self.y.append(np.linspace(-1.378, -0.581, 80))
-                self.y.append(np.linspace(-0.647, 0.151, 80))
+                #self.y.append(np.linspace(-0.647, 0.151, 80))
 
 
             # Calculate the TKE for compressible flow. 
@@ -591,14 +592,14 @@ class DataExpTKE:
     def __init__(self, params):
         """ Initialisation of the data from .csv files. """
         df = []
-        for i in range(params['nfilesTKE']):
+        for i in range(params['nfilesTKEexp']):
             df.append(pd.read_csv(params['pathExpTKE'] + '/' 
                 + params['fileETKE'] + str(i) +'.csv', delimiter=','))
             
         self.y = [] 
         self.tke = []
         self.npoints = []
-        for i in range(params['nfilesTKE']):
+        for i in range(params['nfilesTKEexp']):
             self.y.append(df[i]['y'])
             self.tke.append(df[i]['tke'])
             self.npoints.append(len(df[i]['y']))

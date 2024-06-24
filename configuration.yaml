@@ -3,24 +3,25 @@
 
 # Path 
 path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
-path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI12/post' 
-path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI2/post' 
-path3: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
-pathTKE: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
+#path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI12/post' 
+#path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI2/post' 
+#path3: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
+path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI38/post' 
+pathTKE: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI38/post' 
 pathExp: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpCf: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpLoss: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpTau: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpTKE: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
-nfiles: 4 # how many compressible flow folders we have?
-nfilesTKEdns: 3 
 
 #Experiments nfiles
+nfiles: 2 # how many compressible flow folders we have?
+nfilesTKEdns: 1 
+nfilesTKEexp: 1
 nfilesCp: 4
 nfilesCf: 1
 nfilesLoss: 6
 nfilesTau: 4
-nfilesTKE: 1
 
 # File
 fileF: 'wallAvg'
@@ -34,14 +35,14 @@ fileI: 'inlet'
 fileO: 'exit'
 filehist: 'hpoint'
 filePSDUp: 'hpointUp'
-fileTKE: 'TKE_up' #TKE_down 
+fileTKE: 'TKE_downf' #TKE_down, TKE_up 
 
 # Routines
 routine:
   phisical: False
   correlation: False
-  psd: True
-  tke: False
+  psd: False
+  tke: True
 
 # blade
 nfileBlade: 16
@@ -53,7 +54,6 @@ nfileExit: 16
 nfileInlet: 16
 
 # TKE 
-nfileTKE: 1 # number of files 
 npointsz: 15
 npointsy: 80
 pfreq: 1
@@ -103,7 +103,7 @@ Mach2is: 0.407
 # ymin for wake loss
 yminLoss: -1.79131
 # ymin for tau 
-yminTau: -1.378
+yminTau: -1.451
 # yminTauExp
 yminTkeExp: -0.702381
 # Lz
@@ -114,5 +114,5 @@ dyplus: 3.236666666666667e-05 #0.971e-4
 # Shift position
 # wake loss = 202, tau = 12, tke = 5
 shiftLoss: 202
-shiftTau: 12
+shiftTau: 14
 shiftTke: 74
