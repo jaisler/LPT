@@ -67,7 +67,7 @@ class Data:
 class DataTKE:
     def __init__(self, params):
         """ Extract data from a .csv file 
-            to calculate the Power Density Spectra """
+            to calculate turbulence kinetic energy """
 
         self.rho = []
         self.u = []
@@ -177,7 +177,7 @@ class DataTKE:
                 taumz[i] /= params['npointsz'] 
                 self.tau.append(taumz[i]) # Reynolds stresses
                 # Obtain y range based on the mesh
-                self.y.append(np.linspace(-1.451, -0.676, 80))
+                self.y.append(np.linspace(-1.454, -0.656, 80))
                 #self.y.append(np.linspace(-1.378, -0.581, 80))
                 #self.y.append(np.linspace(-0.647, 0.151, 80))
 
@@ -209,6 +209,136 @@ class DataTKE:
 
     def GetY(self):
         return self.y
+
+class DataTKEBL:
+    def __init__(self, params):
+        """ Extract data from a .csv file 
+            to calculate turbulence kinetic energy
+            in the boundary layer """
+
+        self.rho = []
+        self.u = []
+        self.v = []
+        self.w = []
+        self.p = []
+        self.umag = []
+        self.y = []
+        self.t = []
+        self.dt = []
+        df = []
+
+        qunt = params['quantBL']
+        # Header for the data for each bl for each condition
+        headers = ['s','up', 'vp', 'ump', 'tau11', 'tau22', 'tau33', 'tau12', 'tke', 'tu']
+
+        for i in range(params['nfilesBLtu']): 
+            # Define the size of the tau array
+            tke = []
+            Tu = []
+            tau = np.zeros((qunt, params['blnpxy'])) # tau11: 0, tau22: 1, tau33: 2, tau12: 3
+
+            df.append(pd.read_csv(params['pathTKEBLpre'] + '/'
+                + params['fileTKEBLtu'] + str(i) + '.csv',
+                delimiter=',',))
+
+            # Prepare data: rho,u,v,w,p
+            self.rho.append(df[i]['rho'])
+            self.u.append(df[i]['rhou']/df[i]['rho'])
+            self.v.append(df[i]['rhov']/df[i]['rho'])
+            self.w.append(df[i]['rhow']/df[i]['rho'])
+            self.umag.append(np.sqrt((df[i]['rhou']/df[i]['rho'])**2 
+                                   + (df[i]['rhov']/df[i]['rho'])**2 
+                                   + (df[i]['rhow']/df[i]['rho'])**2))
+            self.p.append((params['gamma'] - 1) * (df[i]['E'] - 0.5 * self.umag[i]))
+
+            # Calculate Reynolds average for rho
+            rhom = np.zeros(params['blnpxy'])
+            l = 0
+            tn = 0
+            while(l < len(self.u[i])):
+                for k in range(params['blnpxy']):
+                    rhoAvgZ = 0
+                    for j in range(params['blnpz']): # params['npointsz']
+                        rhoAvgZ += self.rho[i][j + k * params['blnpz'] + l]
+                    # Obtain the average in z-direction
+                    rhoAvgZ = rhoAvgZ / params['blnpz']
+                    # Obtain the average in time
+                    rhom[k] += rhoAvgZ 
+                l += params['blnpz'] * params['blnpxy']            
+                tn += 1
+            rhom /= tn 
+
+            # Calculate Fabre averages for u,v,w -> {u_i} = <rho u_i> / <rho> 
+            umf = np.zeros(params['blnpxy'])
+            vmf = np.zeros(params['blnpxy'])
+            wmf = np.zeros(params['blnpxy'])
+            l = 0
+            tn = 0
+            while(l < len(self.u[i])):
+                for k in range(params['blnpxy']):
+                    uAvgZ = 0
+                    vAvgZ = 0
+                    wAvgZ = 0
+                    for j in range(params['blnpz']): #params['npointsz']
+                        uAvgZ += (self.rho[i][j + k * params['blnpz'] + l] 
+                                  * self.u[i][j + k * params['blnpz'] + l]) 
+                        vAvgZ += (self.rho[i][j + k * params['blnpz'] + l] 
+                                  * self.v[i][j + k * params['blnpz'] + l])
+                        wAvgZ += (self.rho[i][j + k * params['blnpz'] + l] 
+                                  * self.w[i][j + k * params['blnpz'] + l])
+                    # Obtain the average in z-direction
+                    umf[k] += (uAvgZ / params['blnpz']) 
+                    vmf[k] += (vAvgZ / params['blnpz']) 
+                    wmf[k] += (wAvgZ / params['blnpz']) 
+                l += params['blnpz'] * params['blnpxy']            
+                tn += 1
+            umf /= (tn * rhom)
+            vmf /= (tn * rhom)
+            wmf /= (tn * rhom)
+
+            # Boundary layer profile
+            umagf = np.sqrt(umf*umf + vmf*vmf)
+
+            # Calculate the Reynolds Stresses for compressible flow
+            taumz = np.zeros((qunt, params['blnpxy']))
+            for j in range(params['blnpz']): # z
+                tn = 0
+                l = 0
+                while(l < len(self.u[i])): # time
+                    for k in range(params['blnpxy']): # y
+                        tau[0][k] += (self.rho[i][j + k * params['blnpz'] + l] 
+                                   * (self.u[i][j + k * params['blnpz'] + l] - umf[k])**2)
+                        tau[1][k] += (self.rho[i][j + k * params['blnpz'] + l]  
+                                   * (self.v[i][j + k * params['blnpz'] + l] - vmf[k])**2)
+                        tau[2][k] += (self.rho[i][j + k * params['blnpz'] + l]  
+                                   * (self.w[i][j + k * params['blnpz'] + l] - wmf[k])**2)
+                        tau[3][k] += (self.rho[i][j + k * params['blnpz'] + l] 
+                                   * (self.u[i][j + k * params['blnpz'] + l] - umf[k]) 
+                                   * (self.v[i][j + k * params['blnpz'] + l] - vmf[k]))
+                    l += params['blnpxy'] * params['blnpz']          
+                    tn += 1
+
+                for l in range(qunt):
+                    tau[l] /= tn 
+                    taumz[l] += tau[l]
+
+            for j in range(qunt):
+                taumz[j] /= params['blnpz'] 
+                # Obtain y range based on the mesh
+                #self.y = np.linspace(params['BLpos'][i][0], params['BLpos'][i][1], 36)
+                self.y = np.linspace(0.0, 0.1, 36)
+
+            # Calculate the TKE for compressible flow. 
+            # tke is divided by rhom due to Favre average.
+            tke = (0.5 * (taumz[0] + taumz[1] + taumz[2])) / rhom
+
+            # Turbulence Intensity units in percentage
+            Tu = (100 * (np.sqrt(0.333333*(taumz[0] + taumz[1] + taumz[2])) 
+                           / params['Mach2is']))
+
+            fc.WriteDataToCSV(params['pathTKEBLpre'] + '/' + params['fileTKEBLtupost'] + str(i) + '.csv', 
+                headers, self.y, umf, vmf, umagf, taumz, tke, Tu)
+
 
 class DataSlice:
     def __init__(self, params, loc):
@@ -427,51 +557,58 @@ class DataSpatialCorrelation:
         self.t = []
         self.dt = []
         df = []
-        for i in range(params['nfilecorr']):
-            #subprocess.call(["sed -e 's/ /,/g' "
-            #          + params['path'] + "/"
-            #          + params['fileCorr'] + str(i)+ ".his > "
-            #          + params['path'] + "/"
-            #          + params['fileCorr'] + str(i) + ".csv"], shell=True)
-            df.append(pd.read_csv(params['path'] + '/'
-                + params['filehist'] + str(i) + '.csv',
-                delimiter=',',))
-            
-            self.u.append(df[i]['rhou']/df[i]['rho'])
-            self.v.append(df[i]['rhov']/df[i]['rho'])
-            self.w.append(df[i]['rhow']/df[i]['rho'])
-            self.t.append(df[i]['t'])
-            self.dt.append(df[i]['t'][params['psdNpoints']]-df[i]['t'][0])
+        for l in range(params['nfilescorr']):
+            self.u.append([])
+            self.v.append([])
+            self.w.append([])
+            self.t.append([])
+            self.dt.append([])
+            df.append([])
+            for i in range(params['nfilecorr']):
+                #subprocess.call(["sed -e 's/ /,/g' "
+                #          + params['path'] + "/"
+                #          + params['fileCorr'] + str(i)+ ".his > "
+                #          + params['path'] + "/"
+                #          + params['fileCorr'] + str(i) + ".csv"], shell=True)
+                df[l].append(pd.read_csv(params['path'+str(l)] + '/'
+                    + params['filehist'] + str(i) + '.csv',
+                    delimiter=',',))
+                
+                self.u[l].append(df[l][i]['rhou']/df[l][i]['rho'])
+                self.v[l].append(df[l][i]['rhov']/df[l][i]['rho'])
+                self.w[l].append(df[l][i]['rhow']/df[l][i]['rho'])
+                self.t[l].append(df[l][i]['t'])
+                self.dt[l].append(df[l][i]['t'][params['psdNpoints']]-df[l][i]['t'][0])
 
-            # Mean velocity
-            k = 0
-            tn = 0
-            denu = 0
-            denv = 0
-            denw = 0
-            while (k < len(self.u[i])):
-                meanuz = 0
-                meanvz = 0
-                meanwz = 0
-                for j in range(params['npcorr']): 
-                    meanuz += self.u[i][j+k]
-                    meanvz += self.v[i][j+k]
-                    meanwz += self.w[i][j+k]
-                meanuz /= (params['npcorr'])
-                meanvz /= (params['npcorr'])
-                meanwz /= (params['npcorr'])
-                denu += meanuz
-                denv += meanvz
-                denw += meanwz
-                k += params['npcorr']
-                tn += 1
-            denu /= tn
-            denv /= tn
-            denw /= tn
+                # Mean velocity
+                k = 0
+                tn = 0
+                denu = 0
+                denv = 0
+                denw = 0
+                while (k < len(self.u[l][i])):
+                    meanuz = 0
+                    meanvz = 0
+                    meanwz = 0
+                    for j in range(params['npcorr']): 
+                        meanuz += self.u[l][i][j+k]
+                        meanvz += self.v[l][i][j+k]
+                        meanwz += self.w[l][i][j+k]
+                    meanuz /= (params['npcorr'])
+                    meanvz /= (params['npcorr'])
+                    meanwz /= (params['npcorr'])
+                    denu += meanuz
+                    denv += meanvz
+                    denw += meanwz
+                    k += params['npcorr']
+                    tn += 1
+                denu /= tn
+                denv /= tn
+                denw /= tn
 
-            self.u[i] = self.u[i] - denu
-            self.v[i] = self.v[i] - denv
-            self.w[i] = self.w[i] - denw
+                self.u[l][i] = self.u[l][i] - denu
+                self.v[l][i] = self.v[l][i] - denv
+                self.w[l][i] = self.w[l][i] - denw
 
     def GetUprime(self):
         return self.u

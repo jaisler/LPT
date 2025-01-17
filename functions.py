@@ -1,6 +1,8 @@
 import math
 import numpy as np
 from scipy import signal
+import csv
+import pandas as pd
 
 def bubble_sort(y, qt1, qt2, qt3, qt4, qt5):
     "Bubble sort algorithm"
@@ -264,3 +266,61 @@ def wall_units(x, wss, rho, params):
         spc[i].pop()
 
     return (spc, wallx, wally, wallz)
+
+def boundary_layer_adjustment(factor, u, params):
+    """ Adjust boundary layer turbulence intensity """
+
+    post = 0.50 # first point
+    dec = 0.05
+    for i in range(params['nfilesBLtu']):
+        u[i] /= factor    
+        u[i] += (post/params['Cax'])
+        post += 0.05
+
+    return (u)
+
+
+def WriteDataToCSV(filename, headers, s, up, vp, ump, taumz, tke, tu):
+    """
+    Writes two vectors to a CSV file with headers.
+
+    Args:
+    filename (str): The name of the file to write to.
+    headers (list of str): The headers for the CSV file.
+    vector (list): The vector (column).
+    matrix (list): The matrix (columns).
+    """
+
+    # Open a file in write mode
+    with open(filename, 'w', newline='') as file:
+        writer = csv.writer(file)
+
+        # Write the header
+        writer.writerow(headers)
+
+        # Write the data
+        for v0, v1, v2, v3, v4, v5, v6, v7, v8, v9 in zip(s, up, vp, ump, taumz[0], taumz[1], taumz[2], taumz[3], tke, tu):
+            writer.writerow([v0,v1,v2,v3,v4,v5,v6,v7,v8,v9])
+
+def LoadCSV(filename, delimiter=',', header='infer', skiprows=None, usecols=None):
+    """
+    Load data from a CSV file into a DataFrame.
+
+    Args:
+    filename (str): The path to the CSV file to load.
+    delimiter (str, optional): The character used to separate fields. Defaults to ','.
+    header (int, list of int, or str, optional): Row(s) to use as column names, and the start of data.
+        Defaults to 'infer' which means pandas tries to guess the header location.
+    skiprows (list-like, int or callable, optional): Line numbers to skip (0-indexed) or number of lines to skip (int) at the start of the file.
+    usecols (list-like or callable, optional): Return a subset of the columns by specifying column names or indices.
+
+    Returns:
+    pandas.DataFrame: A DataFrame containing the loaded data.
+    """
+    return pd.read_csv(
+        filename,
+        delimiter=delimiter,
+        header=header,
+        skiprows=skiprows,
+        usecols=usecols
+    )
