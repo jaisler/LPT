@@ -10,6 +10,30 @@ with open(r'configuration.yaml') as file:
     # scalar values to Python the dictionary format
     params = yaml.load(file, Loader=yaml.FullLoader)
 
+if (params['routine']['bltu']['pre']):
+    objTKEBL = DataTKEBL(params)
+
+if (params['routine']['bltu']['post']):
+    scale = 0.725
+    BLtu = []
+    tu = []
+    up = []
+    s = []
+    for j in range(params['nfilesTKEBL']):
+        BLtu.append([])
+        tu.append([])
+        up.append([])
+        s.append([])
+        for i in range(params['nfilesBLtu']):
+            BLtu[j].append(fc.LoadCSV(params['path'+str(j)]+'/BLtupost'+str(i)+'.csv'))
+            tu[j].append(BLtu[j][i]['tu'])
+            up[j].append(BLtu[j][i]['up'])
+            s[j].append(BLtu[j][i]['s']* scale)
+        fc.boundary_layer_adjustment(400, tu[j], params)
+        fc.boundary_layer_adjustment(20, up[j], params)
+    pl.plot_tu_BL(s,tu,params['path0'])
+    pl.plot_up_BL(s,up,params['path0'])
+
 if (params['routine']['tke']):
     # Literature: Experiments and DNS
     objExpTau = DataExpTau(params)
@@ -74,12 +98,15 @@ if (params['routine']['correlation']):
     vp = objCorr.GetVprime()
     wp = objCorr.GetWprime()
 
-    Rii = []
-    Rii.append(fc.CalculateTwoPointsCorrelation(up[params['nfilecorr']-1], params))
-    Rii.append(fc.CalculateTwoPointsCorrelation(vp[params['nfilecorr']-1], params))
-    Rii.append(fc.CalculateTwoPointsCorrelation(wp[params['nfilecorr']-1], params))
+    Rxx = []
+    Ryy = []
+    Rzz = []
+    for i in range(params['nfilescorr']):
+        Rxx.append(fc.CalculateTwoPointsCorrelation(up[i][params['nfilecorr']-1], params))
+        Ryy.append(fc.CalculateTwoPointsCorrelation(vp[i][params['nfilecorr']-1], params))
+        Rzz.append(fc.CalculateTwoPointsCorrelation(wp[i][params['nfilecorr']-1], params))
     z = np.linspace(0, params['Lz'], num=params['npcorr'])
-    pl.plot_tpcorr(z, Rii, params['path'])
+    pl.plot_tpcorr(z, Rxx, Ryy, Rzz, params['path0'])
     
     #Rii = []
     #Rii.append(fc.CalculateOnePointCorrelation(up[0], params))
@@ -236,7 +263,7 @@ if (params['routine']['phisical']):
     rho = objField.GetRho()
     # Calculate wall unit
     (spc, wallx, wally, wallz) = fc.wall_units(x, wss, rho, params) 
-    # Plot wall unit
+    # Plot wall units
     #pl.plot_wall_unit(spc/cax, wallx, wally, wallz, params)
 
     # Wake loss

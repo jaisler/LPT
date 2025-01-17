@@ -5,9 +5,12 @@
 path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
 #path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI12/post' 
 #path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI2/post' 
-#path3: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
-path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI38/post' 
+path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
+path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32C002/post' 
+path3: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32C008/post' 
+#path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI38/post' 
 pathTKE: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI38/post' 
+pathTKEBLpre: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32C008/post' 
 pathExp: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpCf: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpLoss: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
@@ -15,13 +18,14 @@ pathExpTau: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpTKE: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 
 #Experiments nfiles
-nfiles: 2 # how many compressible flow folders we have?
+nfiles: 4 # how many compressible flow folders we have?
 nfilesTKEdns: 1 
 nfilesTKEexp: 1
-nfilesCp: 4
+nfilesCp: 4 
 nfilesCf: 1
 nfilesLoss: 6
 nfilesTau: 4
+nfilesTKEBL: 4 # Four folders
 
 # File
 fileF: 'wallAvg'
@@ -36,13 +40,19 @@ fileO: 'exit'
 filehist: 'hpoint'
 filePSDUp: 'hpointUp'
 fileTKE: 'TKE_downf' #TKE_down, TKE_up 
+fileTKEBLtu: 'BLtu'
+fileTKEBLtupost: 'BLtupost'
 
 # Routines
 routine:
   phisical: False
   correlation: False
   psd: False
-  tke: True
+  tke: False
+  bltu: 
+    pre: False # write down the data
+    post: True # plot
+
 
 # blade
 nfileBlade: 16
@@ -67,14 +77,23 @@ nfilepsd: 13 # number of psd files
 psdloc: 16 # location in the .his file (data)
 psdNpoints: 16 # number of points in the psd file
 
+# BLtu turbulence intensity in the boundary layer
+nfilesBLtu: 8 # number of BLtu files: 8
+blnpz: 8
+blnpxy: 60
+quantBL: 4
+BLpos: [[0.1643,0.2174],[0.1328,0.1633],[0.0297,0.0945],[-0.0434,0.0131],
+        [-0.1306,-0.0809],[-0.2313,-0.1869],[-0.3445,-0.3041],[-0.467,-0.4292]]
+
 # PSD data upstream
 nfilepsdUp: 5 # number of psd files 
 psdlocUp: 8 # location in the .his file (data)
 psdNpointsUp: 8 # number of points in the psd file
 
 # Correlation data
-nfilecorr: 2 # number of correlation files 
+nfilecorr: 14 # number of correlation files 
 npcorr: 16 # number of points in z-direction
+nfilescorr: 4 # number of files for the correlation study
 
 #Non-dimensional parameters
 spacedim: 3 
