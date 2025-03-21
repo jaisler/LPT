@@ -18,23 +18,30 @@ if (params['routine']['bltu']['post']):
     BLtu = []
     tu = []
     up = []
+    vp = []
+    ut = []
     s = []
     for j in range(params['nfilesTKEBL']):
         BLtu.append([])
         tu.append([])
         up.append([])
+        vp.append([])
+        ut.append([])
         s.append([])
         for i in range(params['nfilesBLtu']):
             BLtu[j].append(fc.LoadCSV(params['path'+str(j)]+'/BLtupost'+str(i)+'.csv'))
             tu[j].append(BLtu[j][i]['tu'])
             up[j].append(BLtu[j][i]['up'])
+            vp[j].append(BLtu[j][i]['vp'])
             s[j].append(BLtu[j][i]['s']* scale)
+        ut[j] = (fc.mean_tangential_velocity(up[j], vp[j], params))
         fc.boundary_layer_adjustment(400, tu[j], params)
-        fc.boundary_layer_adjustment(20, up[j], params)
-    pl.plot_tu_BL(s,tu,params['path0'])
-    pl.plot_up_BL(s,up,params['path0'])
+        fc.boundary_layer_adjustment(40, ut[j], params)
 
-if (params['routine']['tke']):
+    pl.plot_tu_BL(s,tu,params['path0'])
+    pl.plot_ut_BL(s,ut,params)
+
+if (params['routine']['tke']['pre']):
     # Literature: Experiments and DNS
     objExpTau = DataExpTau(params)
     objExpTKE = DataExpTKE(params)
@@ -50,6 +57,9 @@ if (params['routine']['tke']):
     Tu = objTKE.GetTu()
     y = objTKE.GetY()
 
+    # Trubulence intensity Tu
+    pl.plot_Tu(y,Tu,params['pathTKE'])
+
     # Reynolds Stresses
     ystar = fc.norm_position(y, params['yminTau'], params['Py'], params)
     (tauShift, ystarShift) = fc.shift_data(tau, ystar, params['shiftTau'])
@@ -61,11 +71,30 @@ if (params['routine']['tke']):
     ystar = fc.norm_position(y, params['yminTau'], params['Py'], params)
     (tkeShift, ystarShift) = fc.shift_data(tke, ystar, params['shiftTke'])
     pl.plot_tke(ystarShift,tkeShift,yexptkestar,tkeexp,params['pathTKE'])
-    
-    # Trubulence intensity Tu
-    pl.plot_Tu(y,Tu,params['pathTKE'])
 
     del objTKE
+
+if (params['routine']['tke']['post']):
+    tu = []
+    y = []
+    df = []
+    for i in range(params['nfilesTKEdns']):
+        if (i == 0):
+            add = -0.17
+        if (i == 1):
+            add = -0.08
+        if (i == 2):
+            add = -0.06
+        
+        df.append(fc.LoadCSV(params['path'+str(i)]+ '/' + params['fileTKE'] + '_post.csv'))
+        tu.append(df[i]['tu'] + add)
+        y.append(df[i]['s'] - 0.647)
+            
+    # Average:
+    for i in range(params['nfilesTKEdns']):
+        print("i = ", i, ", avg = ", np.average(tu[i]))
+
+    pl.plot_Tu(y,tu,params['path0'])
 
 if (params['routine']['psd']):
     objPSDUp = DataPSDUpstream(params)
@@ -133,7 +162,7 @@ if (params['routine']['phisical']):
     for i in range(params['nfiles']):
         P2.append(fc.mass_flow_average_quantity(ye[i], ue[i], pe[i]))
 
-    # Exit angle
+    # Mixed-out exit angle
     alphaM = []
     uM = []
     for i in range(params['nfiles']):
@@ -142,6 +171,13 @@ if (params['routine']['phisical']):
         wbar = fc.mixed_out_average_quantity(ye[i], we[i], params['Py']) # normal velocity
         alphaM.append(np.arctan(vbar/ubar))
         uM.append(np.sqrt(ubar*ubar+vbar*vbar+wbar*wbar))
+
+    # Mass average exit angle
+    alphaA = []
+    for i in range(params['nfiles']):
+        ubar = fc.mass_flow_average_quantity(ye[i], ue[i], ue[i]) # streamwise velocity
+        vbar = fc.mass_flow_average_quantity(ye[i], ue[i], ve[i]) # normal velocity
+        alphaA.append(np.arctan(vbar/ubar))
 
     # Exit Reynolds number
     Re2 = []
@@ -191,10 +227,20 @@ if (params['routine']['phisical']):
         P1_s.append(fc.mass_flow_average_quantity(yi[i], ui[i], pi[i])) # Static pressure
         rhoA = fc.mass_flow_average_quantity(yi[i], ui[i], rhoi[i]) # density
         uA = fc.mass_flow_average_quantity(yi[i], ui[i], ui[i]) # streamwise velocity
-        vA = fc.mass_flow_average_quantity(yi[i], vi[i], vi[i]) # normal velocity
-        wA = fc.mass_flow_average_quantity(yi[i], wi[i], wi[i]) # spanwise velocity
+        vA = fc.mass_flow_average_quantity(yi[i], ui[i], vi[i]) # normal velocity
+        wA = fc.mass_flow_average_quantity(yi[i], ui[i], wi[i]) # spanwise velocity
 
         P1.append(P1_s[i] + 0.5*rhoA*(uA*uA + vA*vA + wA*wA))
+
+    # Inlet angle
+    alphaMI = []
+    uMI = []
+    for i in range(params['nfiles']):
+        ubar = fc.mixed_out_average_quantity(yi[i], ui[i], params['Py']) # streamwise velocity
+        vbar = fc.mixed_out_average_quantity(yi[i], vi[i], params['Py']) # normal velocity
+        wbar = fc.mixed_out_average_quantity(yi[i], wi[i], params['Py']) # normal velocity
+        alphaMI.append(np.arctan(vbar/ubar))
+        uMI.append(np.sqrt(ubar*ubar+vbar*vbar+wbar*wbar))
 
     # Inlet Isentropic Mach Number (Mass average)
     # Exit Isentropic Mach Number (Mass average)
@@ -220,7 +266,9 @@ if (params['routine']['phisical']):
     for i in range(params['nfiles']):
         print('File'+str(i)+':')
         print('P2/P1=',P2[i]/P1[i])
-        print('alphaM=', alphaM[i]*180/np.pi)
+        print('exit angle=', alphaM[i]*180/np.pi)
+        print('mass avg exit angle=', alphaA[i]*180/np.pi)
+        print('inlet angle=', alphaMI[i]*180/np.pi)
         print('Ma1is=', Ma1is[i])
         print('Ma2is=', Ma2is[i])
         print('Re2=', Re2[i])
@@ -234,7 +282,7 @@ if (params['routine']['phisical']):
     # Cp distribution
     p = objField.GetP()
     npoints = objField.GetNpoints()
-    cp = fc.pressure_coefficient(p, P1, P2, npoints, params)
+    #cp = fc.pressure_coefficient(p, P1, P2, npoints, params)
 
     # Axial chord
     x = objField.GetX()
@@ -244,7 +292,7 @@ if (params['routine']['phisical']):
     xexp = objExp.GetX()
     cpexp = objExp.GetCP()
     # Plot Cp distribution
-    pl.plot_cp(x/cax, cp, xexp, cpexp, params['path0']) 
+    #pl.plot_cp(x/cax, cp, xexp, cpexp, params['path0']) 
 
 
     objExpCf = DataExpCf(params) # Experimental data
@@ -257,14 +305,14 @@ if (params['routine']['phisical']):
     # Skin friction: Implementation from Garai et al. 2015
     cf = fc.skin_friction_coefficiet(x, wss, P1, P2, params) 
     # Plot x-shear stress
-    pl.plot_cf(x/cax, cf, xexp, cfexp, params['path0'])
+    #pl.plot_cf(x/cax, cf, xexp, cfexp, params['path0'])
 
     # rho density
     rho = objField.GetRho()
     # Calculate wall unit
-    (spc, wallx, wally, wallz) = fc.wall_units(x, wss, rho, params) 
+    (spc, wallx, wally, wallz) = fc.wall_units_full(x, wss, rho, params) 
     # Plot wall units
-    #pl.plot_wall_unit(spc/cax, wallx, wally, wallz, params)
+    pl.plot_wall_unit(spc/cax, wallx, wally, wallz, params)
 
     # Wake loss
     ye = objExit.GetY() 
@@ -282,4 +330,8 @@ if (params['routine']['phisical']):
     ystarFlip = fc.flip_data(ystarShift, params)
 
     # Plot wake loss
-    pl.plot_wake_loss(ystarFlip, lossShift, xexp, lossexp, params['path0'])
+    #pl.plot_wake_loss(ystarFlip, lossShift, xexp, lossexp, params['path0'])
+
+    # Mixed-out loss
+    #mo_loss = fc.mixed_out_average_quantity(ystarFlip[0], -lossShift[0], params['Py'])
+    #print("mo_loss = ", mo_loss)

@@ -6,44 +6,53 @@ rc('text', usetex=True)
 def plot_tu_BL(s,tu,path):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
-    plt.rc('legend',**{'fontsize':14})
+    plt.rc('legend',**{'fontsize':28})
 
-    p0, = plt.plot(tu[0][0], s[0][0], '-', color='darkorange', linewidth=3)	
-    plt.plot(tu[0][1], s[0][1], '-', color='darkorange', linewidth=3)	
-    plt.plot(tu[0][2], s[0][2], '-', color='darkorange', linewidth=3)	
-    plt.plot(tu[0][3], s[0][3], '-', color='darkorange', linewidth=3)	
-    plt.plot(tu[0][4], s[0][4], '-', color='darkorange', linewidth=3)	
-    plt.plot(tu[0][5], s[0][5], '-', color='darkorange', linewidth=3)	
-    plt.plot(tu[0][6], s[0][6], '-', color='darkorange', linewidth=3)	
-    plt.plot(tu[0][7], s[0][7], '-', color='darkorange', linewidth=3)
+    x = [0.814, 0.814]
+    y = [0.0, 0.08]
+    #plt.plot(x, y, '--', color='k', linewidth=6)
 
-    p1, = plt.plot(tu[1][0], s[1][0], '-', color='m', linewidth=3)	
-    plt.plot(tu[1][1], s[1][1], '-', color='m', linewidth=3)	
-    plt.plot(tu[1][2], s[1][2], '-', color='m', linewidth=3)	
-    plt.plot(tu[1][3], s[1][3], '-', color='m', linewidth=3)	
-    plt.plot(tu[1][4], s[1][4], '-', color='m', linewidth=3)	
-    plt.plot(tu[1][5], s[1][5], '-', color='m', linewidth=3)	
-    plt.plot(tu[1][6], s[1][6], '-', color='m', linewidth=3)	
-    plt.plot(tu[1][7], s[1][7], '-', color='m', linewidth=3)
+    # Shade the left half (x < 0.814)
+    ax.axvspan(0, 0.814, color='gray', alpha=0.3)  
+    # Vertical separation line at x=0.814
+    ax.axvline(x=0.814, linestyle='--', color='gray', alpha=0.5, linewidth=2)
+
+    p0, = plt.plot(tu[0][0], s[0][0], '-', color='darkorange', linewidth=5)	
+    plt.plot(tu[0][1], s[0][1], '-', color='darkorange', linewidth=5)	
+    plt.plot(tu[0][2], s[0][2], '-', color='darkorange', linewidth=5)	
+    plt.plot(tu[0][3], s[0][3], '-', color='darkorange', linewidth=5)	
+    plt.plot(tu[0][4], s[0][4], '-', color='darkorange', linewidth=5)	
+    plt.plot(tu[0][5], s[0][5], '-', color='darkorange', linewidth=5)	
+    plt.plot(tu[0][6], s[0][6], '-', color='darkorange', linewidth=5)	
+    plt.plot(tu[0][7], s[0][7], '-', color='darkorange', linewidth=5)
+
+    p1, = plt.plot(tu[1][0], s[1][0], '-', color='m', linewidth=5)	
+    plt.plot(tu[1][1], s[1][1], '-', color='m', linewidth=5)	
+    plt.plot(tu[1][2], s[1][2], '-', color='m', linewidth=5)	
+    plt.plot(tu[1][3], s[1][3], '-', color='m', linewidth=5)	
+    plt.plot(tu[1][4], s[1][4], '-', color='m', linewidth=5)	
+    plt.plot(tu[1][5], s[1][5], '-', color='m', linewidth=5)	
+    plt.plot(tu[1][6], s[1][6], '-', color='m', linewidth=5)	
+    plt.plot(tu[1][7], s[1][7], '-', color='m', linewidth=5)
 
 
-    p2, = plt.plot(tu[2][0], s[2][0], '-', color='darkred', linewidth=3)	
-    plt.plot(tu[2][1], s[2][1], '-', color='darkred', linewidth=3)	
-    plt.plot(tu[2][2], s[2][2], '-', color='darkred', linewidth=3)	
-    plt.plot(tu[2][3], s[2][3], '-', color='darkred', linewidth=3)	
-    plt.plot(tu[2][4], s[2][4], '-', color='darkred', linewidth=3)	
-    plt.plot(tu[2][5], s[2][5], '-', color='darkred', linewidth=3)	
-    plt.plot(tu[2][6], s[2][6], '-', color='darkred', linewidth=3)
-    plt.plot(tu[2][7], s[2][7], '-', color='darkred', linewidth=3)
+    p2, = plt.plot(tu[2][0], s[2][0], '-', color='darkred', linewidth=5)	
+    plt.plot(tu[2][1], s[2][1], '-', color='darkred', linewidth=5)	
+    plt.plot(tu[2][2], s[2][2], '-', color='darkred', linewidth=5)	
+    plt.plot(tu[2][3], s[2][3], '-', color='darkred', linewidth=5)	
+    plt.plot(tu[2][4], s[2][4], '-', color='darkred', linewidth=5)	
+    plt.plot(tu[2][5], s[2][5], '-', color='darkred', linewidth=5)	
+    plt.plot(tu[2][6], s[2][6], '-', color='darkred', linewidth=5)
+    plt.plot(tu[2][7], s[2][7], '-', color='darkred', linewidth=5)
 
-    p3, = plt.plot(tu[3][0], s[3][0], '-', color='b', linewidth=3)	
-    plt.plot(tu[3][1], s[3][1], '-', color='b', linewidth=3)	
-    plt.plot(tu[3][2], s[3][2], '-', color='b', linewidth=3)	
-    plt.plot(tu[3][3], s[3][3], '-', color='b', linewidth=3)	
-    plt.plot(tu[3][4], s[3][4], '-', color='b', linewidth=3)	
-    plt.plot(tu[3][5], s[3][5], '-', color='b', linewidth=3)	
-    plt.plot(tu[3][6], s[3][6], '-', color='b', linewidth=3)
-    plt.plot(tu[3][7], s[3][7], '-', color='b', linewidth=3)
+    p3, = plt.plot(tu[3][0], s[3][0], '-', color='b', linewidth=5)	
+    plt.plot(tu[3][1], s[3][1], '-', color='b', linewidth=5)	
+    plt.plot(tu[3][2], s[3][2], '-', color='b', linewidth=5)	
+    plt.plot(tu[3][3], s[3][3], '-', color='b', linewidth=5)	
+    plt.plot(tu[3][4], s[3][4], '-', color='b', linewidth=5)	
+    plt.plot(tu[3][5], s[3][5], '-', color='b', linewidth=5)	
+    plt.plot(tu[3][6], s[3][6], '-', color='b', linewidth=5)
+    plt.plot(tu[3][7], s[3][7], '-', color='b', linewidth=5)
 
 
     #plt.legend([p0,p1,p2,p3],
@@ -57,78 +66,116 @@ def plot_tu_BL(s,tu,path):
 
     plt.tick_params(reset=True, direction="in", which='both')
     plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='major')
-    plt.subplots_adjust(left=0.152, right=0.96, bottom=0.135, top=0.96)
+    plt.subplots_adjust(left=0.07, right=0.99, bottom=0.186, top=0.815)
     plt.xlim((0.55,1.175)) 
-    plt.ylim((0.0, 0.0725)) 
-    plt.xticks(fontsize = 24)
-    plt.yticks(fontsize = 24)
-    plt.xlabel(r'$x/C_{ax}$',fontsize = 24)
-    plt.ylabel(r'$s/C$',fontsize = 24)
+    plt.ylim((0.0, 0.0725))
+    ax.set_yticks([0.02, 0.04, 0.06]) 
+    plt.xticks(fontsize = 30)
+    plt.yticks(fontsize = 30)
+    plt.xlabel(r'$x/C_{ax}$',fontsize = 30)
+    plt.ylabel(r'$s/C$',fontsize = 30)
     fig.savefig(path + '/BLtu.pdf', format='PDF')
     fig.savefig(path + '/BLtu.png', format='png')
     plt.show()
 
-def plot_up_BL(s,up,path):
+def plot_ut_BL(s,ut,params):
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
-    plt.rc('legend',**{'fontsize':14})
+    plt.rc('legend',**{'fontsize':28})
 
-    p0, = plt.plot(up[0][0], s[0][0], '-', color='darkorange', linewidth=3)	
-    plt.plot(up[0][1], s[0][1], '-', color='darkorange', linewidth=3)	
-    plt.plot(up[0][2], s[0][2], '-', color='darkorange', linewidth=3)	
-    plt.plot(up[0][3], s[0][3], '-', color='darkorange', linewidth=3)	
-    plt.plot(up[0][4], s[0][4], '-', color='darkorange', linewidth=3)	
-    plt.plot(up[0][5], s[0][5], '-', color='darkorange', linewidth=3)	
-    plt.plot(up[0][6], s[0][6], '-', color='darkorange', linewidth=3)	
-    plt.plot(up[0][7], s[0][7], '-', color='darkorange', linewidth=3)
+    x = [0.814, 0.814]
+    y = [0.0, 0.08]
+    #plt.plot(x, y, '--', color='k', linewidth=6)
 
-    p1, = plt.plot(up[1][0], s[1][0], '-', color='m', linewidth=3)	
-    plt.plot(up[1][1], s[1][1], '-', color='m', linewidth=3)	
-    plt.plot(up[1][2], s[1][2], '-', color='m', linewidth=3)	
-    plt.plot(up[1][3], s[1][3], '-', color='m', linewidth=3)	
-    plt.plot(up[1][4], s[1][4], '-', color='m', linewidth=3)	
-    plt.plot(up[1][5], s[1][5], '-', color='m', linewidth=3)	
-    plt.plot(up[1][6], s[1][6], '-', color='m', linewidth=3)	
-    plt.plot(up[1][7], s[1][7], '-', color='m', linewidth=3)
+    # Shade the left half (x < 0.814)
+    ax.axvspan(0, 0.814, color='gray', alpha=0.3)  
+    # Vertical separation line at x=0.814
+    ax.axvline(x=0.814, linestyle='--', color='gray', alpha=0.5, linewidth=2)
 
-    p2, = plt.plot(up[2][0], s[2][0], '-', color='darkred', linewidth=3)	
-    plt.plot(up[2][1], s[2][1], '-', color='darkred', linewidth=3)	
-    plt.plot(up[2][2], s[2][2], '-', color='darkred', linewidth=3)	
-    plt.plot(up[2][3], s[2][3], '-', color='darkred', linewidth=3)	
-    plt.plot(up[2][4], s[2][4], '-', color='darkred', linewidth=3)	
-    plt.plot(up[2][5], s[2][5], '-', color='darkred', linewidth=3)	
-    plt.plot(up[2][6], s[2][6], '-', color='darkred', linewidth=3)
-    plt.plot(up[2][7], s[2][7], '-', color='darkred', linewidth=3)
+    p0, = plt.plot(ut[0][0], s[0][0], '-', color='darkorange', linewidth=5)	
+    plt.plot(ut[0][1], s[0][1], '-', color='darkorange', linewidth=5)	
+    plt.plot(ut[0][2], s[0][2], '-', color='darkorange', linewidth=5)	
+    plt.plot(ut[0][3], s[0][3], '-', color='darkorange', linewidth=5)	
+    plt.plot(ut[0][4], s[0][4], '-', color='darkorange', linewidth=5)	
+    plt.plot(ut[0][5], s[0][5], '-', color='darkorange', linewidth=5)	
+    plt.plot(ut[0][6], s[0][6], '-', color='darkorange', linewidth=5)	
+    plt.plot(ut[0][7], s[0][7], '-', color='darkorange', linewidth=5)
 
-    p3, = plt.plot(up[3][0], s[3][0], '-', color='b', linewidth=3)	
-    plt.plot(up[3][1], s[3][1], '-', color='b', linewidth=3)	
-    plt.plot(up[3][2], s[3][2], '-', color='b', linewidth=3)	
-    plt.plot(up[3][3], s[3][3], '-', color='b', linewidth=3)	
-    plt.plot(up[3][4], s[3][4], '-', color='b', linewidth=3)	
-    plt.plot(up[3][5], s[3][5], '-', color='b', linewidth=3)	
-    plt.plot(up[3][6], s[3][6], '-', color='b', linewidth=3)
-    plt.plot(up[2][7], s[2][7], '-', color='b', linewidth=3)
+    p1, = plt.plot(ut[1][0], s[1][0], '-', color='m', linewidth=5)	
+    plt.plot(ut[1][1], s[1][1], '-', color='m', linewidth=5)	
+    plt.plot(ut[1][2], s[1][2], '-', color='m', linewidth=5)	
+    plt.plot(ut[1][3], s[1][3], '-', color='m', linewidth=5)	
+    plt.plot(ut[1][4], s[1][4], '-', color='m', linewidth=5)	
+    plt.plot(ut[1][5], s[1][5], '-', color='m', linewidth=5)	
+    plt.plot(ut[1][6], s[1][6], '-', color='m', linewidth=5)	
+    plt.plot(ut[1][7], s[1][7], '-', color='m', linewidth=5)
 
-    plt.legend([p0,p1,p2,p3],
+    p2, = plt.plot(ut[2][0], s[2][0], '-', color='darkred', linewidth=5)	
+    plt.plot(ut[2][1], s[2][1], '-', color='darkred', linewidth=5)	
+    plt.plot(ut[2][2], s[2][2], '-', color='darkred', linewidth=5)	
+    plt.plot(ut[2][3], s[2][3], '-', color='darkred', linewidth=5)	
+    plt.plot(ut[2][4], s[2][4], '-', color='darkred', linewidth=5)	
+    plt.plot(ut[2][5], s[2][5], '-', color='darkred', linewidth=5)	
+    plt.plot(ut[2][6], s[2][6], '-', color='darkred', linewidth=5)
+    plt.plot(ut[2][7], s[2][7], '-', color='darkred', linewidth=5)
+
+    p3, = plt.plot(ut[3][0], s[3][0], '-', color='b', linewidth=5)	
+    plt.plot(ut[3][1], s[3][1], '-', color='b', linewidth=5)	
+    plt.plot(ut[3][2], s[3][2], '-', color='b', linewidth=5)	
+    plt.plot(ut[3][3], s[3][3], '-', color='b', linewidth=5)	
+    plt.plot(ut[3][4], s[3][4], '-', color='b', linewidth=5)	
+    plt.plot(ut[3][5], s[3][5], '-', color='b', linewidth=5)	
+    plt.plot(ut[3][6], s[3][6], '-', color='b', linewidth=5)
+    plt.plot(ut[3][7], s[3][7], '-', color='b', linewidth=5)
+
+    p4l, = plt.plot(params['blpx'], params['blh'], '-.', color='k', linewidth=2) 
+    p4, = plt.plot(params['blpx'], params['blh'], '^', color='k', mfc='w', markersize=14) 
+
+    legend1 = plt.legend([p0,p1,p2,p3],
     [
       r'0\% Tu',
-      r'3.2\% Tu, 2\% chord length',
-      r'3.2\% Tu, 5\% chord length',
-      r'3.2\% Tu, 8\% chord length',
+      r'3.2\% Tu, 2\% CL',
+      r'3.2\% Tu, 5\% CL',
+      r'3.2\% Tu, 8\% CL',
     ],
-    loc='best')
+    bbox_to_anchor=(0, 1),
+    ncol=4,  
+    #columnspacing=0.25,  # Reduce space between columns
+    #labelspacing=0.2,  # Reduce vertical space
+    loc='lower left'
+    )
+
+    legend2 = plt.legend([(p4l,p4)],
+    [
+      r'$\delta_{99}$'
+    ],
+    #bbox_to_anchor=(0, 1),
+    #ncol=4,  
+    #columnspacing=0.25,  # Reduce space between columns
+    #labelspacing=0.2,  # Reduce vertical space
+    loc='upper right'
+    )
+
+    ax.add_artist(legend1)
+
+    ax.text(0.56, 0.06, "Before", fontsize=28, color='k')
+    ax.text(0.56, 0.054, "separation", fontsize=28, color='k')
+
+    ax.text(1.06, 0.02, "After", fontsize=28, color='k')
+    ax.text(1.06, 0.014, "separation", fontsize=28, color='k')
 
     plt.tick_params(reset=True, direction="in", which='both')
     plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='major')
-    plt.subplots_adjust(left=0.152, right=0.96, bottom=0.135, top=0.96)
+    plt.subplots_adjust(left=0.07, right=0.99, bottom=0.186, top=0.815)
     plt.xlim((0.55,1.175)) 
     plt.ylim((0.0, 0.0725)) 
-    plt.xticks(fontsize = 24)
-    plt.yticks(fontsize = 24)
-    plt.xlabel(r'$x/C_{ax}$',fontsize = 24)
-    plt.ylabel(r'$s/C$',fontsize = 24)
-    fig.savefig(path + '/BLup.pdf', format='PDF')
-    fig.savefig(path + '/BLup.png', format='png')
+    ax.set_yticks([0.02, 0.04, 0.06])
+    plt.xticks(fontsize = 30)
+    plt.yticks(fontsize = 30)
+    plt.xlabel(r'$x/C_{ax}$',fontsize = 30)
+    plt.ylabel(r'$s/C$',fontsize = 30)
+    fig.savefig(params['path0'] + '/BLup.pdf', format='PDF')
+    fig.savefig(params['path0'] + '/BLup.png', format='png')
     plt.show()
 
 def plot_Tu(y,Tu,path):
@@ -136,30 +183,29 @@ def plot_Tu(y,Tu,path):
     ax = fig.add_subplot(1,1,1)
     plt.rc('legend',**{'fontsize':14})
 
-    #p0, = plt.plot(Tu[0], y[0], '-', color='orangered', linewidth=3)	
-    #p1, = plt.plot(Tu[1], y[0], '-', color='red', linewidth=3)	
-    #p2, = plt.plot(Tu[2], y[0], '-', color='darkred', linewidth=3)	
-    p3, = plt.plot(Tu[0], y[0], '-', color='darkred', linewidth=3)	
+    p0, = plt.plot(Tu[0], y[0], '-', color='orangered', linewidth=3)	
+    p1, = plt.plot(Tu[1], y[0], '-', color='red', linewidth=3)	
+    p2, = plt.plot(Tu[2], y[0], '-', color='darkred', linewidth=3)	
+    #p3, = plt.plot(Tu[0], y[0], '-', color='darkred', linewidth=3)	
 
 
-    plt.legend([p3],
+    plt.legend([p0,p1,p2],
     [
-      #r'Present, 1.2\% Tu',
-      #r'Present, 2\% Tu',
-      #r'Present, 3.2\% Tu',
-      r'Present, 3.8\% Tu',
+      r'1.2\% Tu',
+      r'2\% Tu',
+      r'3.2\% Tu',
     ],
-    loc='best')
+    loc=(0.4,0.77))
 
     plt.tick_params(reset=True, direction="in", which='both')
     plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='major')
     plt.subplots_adjust(left=0.152, right=0.96, bottom=0.135, top=0.96)
-    #plt.xlim((1e0,500)) 
-    #plt.ylim((-150, 10)) 
+    plt.xlim((1,4)) 
+    plt.ylim((-0.647, 0.151)) 
     plt.xticks(fontsize = 20)
     plt.yticks(fontsize = 20)
-    plt.xlabel(r'Tu [$\%$]',fontsize = 18)
-    plt.ylabel(r'$y$',fontsize = 18)
+    plt.xlabel(r'Tu [$\%$]',fontsize = 20)
+    plt.ylabel(r'$y/C$',fontsize = 20)
     fig.savefig(path + '/Tu.pdf', format='PDF')
     fig.savefig(path + '/Tu.png', format='png')
     plt.show()
@@ -389,8 +435,9 @@ def plot_tpcorr(z, Rxx, Ryy, Rzz, path):
 
 def plot_cp(x, cp, xe, cpe, path):
     # Figure - Cp distribution
-    plt.figure()
-    plt.rc('legend',**{'fontsize':12})
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
+    plt.rc('legend',**{'fontsize':16})
 
     #p0, = plt.plot(xe[0], cpe[0], 'o', color='none', markeredgecolor='k', markersize=13)	
     ##p1, = plt.plot(xe[1], cpe[1], ':', color='gold', linewidth=2)	
@@ -421,7 +468,7 @@ def plot_cp(x, cp, xe, cpe, path):
      r'Present, 2\% Tu',
      r'Present, 3.2\% Tu',
     ],
-    loc='center')
+    loc='center left')
 
     #p0, = plt.plot(xe[0], cpe[0], 'o', color='none', markeredgecolor='k', markersize=13)	
     #p1, = plt.plot(x[0], cp[0], '-', color='g', linewidth=2)	
@@ -440,12 +487,13 @@ def plot_cp(x, cp, xe, cpe, path):
     plt.tick_params(reset=True, direction="in", which='both')
     plt.subplots_adjust(left=0.18, right=0.95, bottom=0.16, top=0.97)
     plt.grid(color='0.5', linestyle=':', linewidth=0.5, which='both')
-    plt.xlim((0.0,1))
-    plt.ylim((-0.5, 1.05))
-    plt.xticks(fontsize = 20)
-    plt.yticks(fontsize = 20)
-    plt.xlabel(r'$x/C_{ax}$',fontsize = 20)
-    plt.ylabel(r'$C_{p}$',fontsize = 20)
+    plt.xlim((0.78,1.0))
+    plt.ylim((-0.3, 0.85))
+    ax.set_xticks([0.8, 0.85, 0.9, 0.95, 1.0]) 
+    plt.xticks(fontsize = 24)
+    plt.yticks(fontsize = 24)
+    plt.xlabel(r'$x/C_{ax}$',fontsize = 24)
+    plt.ylabel(r'$C_{p}$',fontsize = 24)
     plt.savefig(path + '/cp.pdf', format='PDF')
     plt.savefig(path + '/cp.png', format='png')
     plt.show()
@@ -471,20 +519,23 @@ def plot_cf(x, sh, xe, she, path):
             xaux[i].append(x[i][j])
 
     for i in range(len(sh)):
-        for j in range(0, 147):
+        for j in range(0, 147): 
             shaux[i].append(sh[i][j])
             xaux[i].append(x[i][j])
 
 
     #p0, = plt.plot(xe[0], she[0], '--', color='purple', linewidth=2)
-    #p0, = plt.plot(xaux[0], shaux[0], '-', color='darkorange', linewidth=2)	
+    p0, = plt.plot(xaux[0], shaux[0], '-', color='darkorange', linewidth=2)	
     #p1, = plt.plot(xaux[1], shaux[1], '-', color='orangered', linewidth=2)	
-    p0, = plt.plot(xaux[0], shaux[0], '-', color='m', linewidth=2)	
-    p1, = plt.plot(xaux[1], shaux[1], '-', color='darkred', linewidth=2)	
-    p2, = plt.plot(xaux[2], shaux[2], '-', color='b', linewidth=2)	
+    #p2, = plt.plot(xaux[2], shaux[2], '-', color='red', linewidth=2)	
+ 
+    p1, = plt.plot(xaux[1], shaux[1], '-', color='m', linewidth=2)	
+    p2, = plt.plot(xaux[2], shaux[2], '-', color='darkred', linewidth=2)	
+    p3, = plt.plot(xaux[3], shaux[3], '-', color='b', linewidth=2)	
 
-    plt.legend([p0, p1, p2],
+    plt.legend([p0, p1, p2, p3],
     [
+     r'0\% Tu',
      r'3.2\% Tu, 2\% chord length',
      r'3.2\% Tu, 5\% chord length',
      r'3.2\% Tu, 8\% chord length',
@@ -606,7 +657,7 @@ def plot_wall_unit(spc, wallx, wally, wallz, params):
 
     plt.legend([p0, p1, p2],
     [r'$\Delta x^{+}$',
-     r'$\Delta y_{wall}^{+}$', 
+     r'$\Delta y^{+}$', 
      r'$\Delta z^{+}$'],
     loc='best')
 

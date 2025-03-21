@@ -2,12 +2,12 @@
 # All paths are to be given without final slash.
 
 # Path 
-path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
-#path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI12/post' 
-#path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI2/post' 
-path2: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
-path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32C002/post' 
-path3: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32C008/post' 
+#path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avg/post' 
+#path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI12/post' 
+#path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI2/post' 
+path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32/post' 
+#path1: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32C002/post' 
+#path3: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32C008/post' 
 #path0: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI38/post' 
 pathTKE: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI38/post' 
 pathTKEBLpre: '/Users/isler/OneDrive/imperial/RR/t106a/sims3d461/sim4/re36900/ma244/02C24P5m4/avgM8TI32C008/post' 
@@ -18,8 +18,8 @@ pathExpTau: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 pathExpTKE: '/Users/isler/OneDrive/imperial/RR/t106a/exp'
 
 #Experiments nfiles
-nfiles: 4 # how many compressible flow folders we have?
-nfilesTKEdns: 1 
+nfiles: 1 # how many compressible flow folders we have?
+nfilesTKEdns: 3 
 nfilesTKEexp: 1
 nfilesCp: 4 
 nfilesCf: 1
@@ -39,19 +39,21 @@ fileI: 'inlet'
 fileO: 'exit'
 filehist: 'hpoint'
 filePSDUp: 'hpointUp'
-fileTKE: 'TKE_downf' #TKE_down, TKE_up 
+fileTKE: 'TKE_up' #TKE_down, TKE_downf, TKE_up 
 fileTKEBLtu: 'BLtu'
 fileTKEBLtupost: 'BLtupost'
 
 # Routines
 routine:
-  phisical: False
+  phisical: True
   correlation: False
   psd: False
-  tke: False
+  tke: 
+    pre: False
+    post: False
   bltu: 
     pre: False # write down the data
-    post: True # plot
+    post: False # plot
 
 
 # blade
@@ -82,8 +84,12 @@ nfilesBLtu: 8 # number of BLtu files: 8
 blnpz: 8
 blnpxy: 60
 quantBL: 4
-BLpos: [[0.1643,0.2174],[0.1328,0.1633],[0.0297,0.0945],[-0.0434,0.0131],
-        [-0.1306,-0.0809],[-0.2313,-0.1869],[-0.3445,-0.3041],[-0.467,-0.4292]]
+#BLpos: [[0.1643,0.2174],[0.1328,0.1633],[0.0297,0.0945],[-0.0434,0.0131],
+#        [-0.1306,-0.0809],[-0.2313,-0.1869],[-0.3445,-0.3041],[-0.467,-0.4292]]
+theta: [-32.21, -41,54, -49.62, -55.63, -60.17, -63.59, -66.17, -67,797]
+# Taking from mean tangential profile
+blh: [0.029000, 0.039357, 0.047643, 0.055929]
+blpx: [0.802731, 0.860650, 0.918198, 0.975650]
 
 # PSD data upstream
 nfilepsdUp: 5 # number of psd files 

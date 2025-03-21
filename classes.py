@@ -89,9 +89,14 @@ class DataTKE:
         qunt = params['qunt']
         tau = np.zeros((qunt*params['nfilesTKEdns'], params['npointsy'])) # tau11: 0, tau22: 1, tau33: 2, tau12: 3
 
-        for i in range(params['nfilesTKEdns']): 
+        # Header for the data for each bl for each condition
+        headers = ['s','up', 'vp', 'ump', 'tau11', 'tau22', 'tau33', 'tau12', 'tke', 'tu']
 
-            df.append(pd.read_csv(params['path'+ str(i+1)] + '/'
+        for i in range(params['nfilesTKEdns']): 
+            tke = []
+            Tu = []
+
+            df.append(pd.read_csv(params['path'+ str(i)] + '/'
                 + params['fileTKE'] + '.csv',
                 delimiter=',',))
 
@@ -150,6 +155,9 @@ class DataTKE:
             vmf /= (tn * rhom)
             wmf /= (tn * rhom)
 
+            # magnitude
+            umagf = np.sqrt(umf*umf + vmf*vmf + wmf*wmf)
+
             # Calculate the Reynolds Stresses for compressible flow
             taumz = np.zeros((qunt, params['npointsy']))
             for j in range(params['npointsz']): # z
@@ -157,40 +165,44 @@ class DataTKE:
                 l = 0
                 while(l < len(self.u[i])): # time
                     for k in range(params['npointsy']): # y
-                        tau[0+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l] 
+                        #tau[3+4*i][k]
+                        tau[0][k] += (self.rho[i][j + k * params['npointsz'] + l] 
                                    * (self.u[i][j + k * params['npointsz'] + l] - umf[k])**2)
-                        tau[1+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l]  
+                        tau[1][k] += (self.rho[i][j + k * params['npointsz'] + l]  
                                    * (self.v[i][j + k * params['npointsz'] + l] - vmf[k])**2)
-                        tau[2+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l]  
+                        tau[2][k] += (self.rho[i][j + k * params['npointsz'] + l]  
                                    * (self.w[i][j + k * params['npointsz'] + l] - wmf[k])**2)
-                        tau[3+4*i][k] += (self.rho[i][j + k * params['npointsz'] + l] 
+                        tau[3][k] += (self.rho[i][j + k * params['npointsz'] + l] 
                                    * (self.u[i][j + k * params['npointsz'] + l] - umf[k]) 
                                    * (self.v[i][j + k * params['npointsz'] + l] - vmf[k]))
                     l += params['npointsy'] * params['npointsz']          
                     tn += 1
 
                 for l in range(qunt):
-                    tau[l+4*i] /= tn 
-                    taumz[l] += tau[l+4*i]
+                    tau[l] /= tn     #tau[l+4*i]
+                    taumz[l] += tau[l]  #tau[l+4*i]
 
-            for i in range(qunt):
-                taumz[i] /= params['npointsz'] 
-                self.tau.append(taumz[i]) # Reynolds stresses
+            for j in range(qunt):
+                taumz[j] /= params['npointsz'] 
+                self.tau.append(taumz[j]) # Reynolds stresses
                 # Obtain y range based on the mesh
-                self.y.append(np.linspace(-1.454, -0.656, 80))
+                #self.y.append(np.linspace(-1.454, -0.656, 80))
                 #self.y.append(np.linspace(-1.378, -0.581, 80))
                 #self.y.append(np.linspace(-0.647, 0.151, 80))
-
+                self.y = np.linspace(0.0, 0.799, 80)
 
             # Calculate the TKE for compressible flow. 
             # tke is divided by rhom due to Favre average.
-            self.tke.append((0.5 * (taumz[0] + taumz[1] + taumz[2])) / rhom) 
+            tke = (0.5 * (taumz[0] + taumz[1] + taumz[2])) / rhom
 
             # Turbulence Intensity units in percentage
-            self.Tu.append(100 * (np.sqrt(0.333333*(taumz[0] + taumz[1] + taumz[2])) 
-                           / params['Mach2is']))
+            Tu = 100 * (np.sqrt(0.333333*(taumz[0] + taumz[1] + taumz[2])) 
+                           / params['Mach2is'])
             #self.prod.append(prod)
             #self.diss.append(diss)
+            
+            fc.WriteDataToCSV(params['path' + str(i)] + '/' + params['fileTKE'] + '_post.csv', 
+                headers, self.y, umf, vmf, umagf, taumz, tke, Tu)
 
     def GetTau(self):
         return self.tau
