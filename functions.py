@@ -267,6 +267,43 @@ def wall_units(x, wss, rho, params):
 
     return (spc, wallx, wally, wallz)
 
+def wall_units_full(x, wss, rho, params):
+    """ Calculate wall units full blade"""
+    wallx = []
+    wally = []
+    wallz = []
+    spc = []
+    shear = []
+    den = []
+    kinvis = []
+    for i in range(params['nfiles']):
+        spc.append([])
+        shear.append([])
+        kinvis.append([])
+        den.append([])
+        for j in range(len(x[i])):
+            spc[i].append(x[i][j])
+            shear[i].append(wss[i][j])
+            den[i].append(rho[i][j])
+            kinvis[i].append(params['mu'][0]/rho[i][j])
+    
+    # Calculation of kinvis with rhoInf
+    kinvisStat = 1 # params['rhoInf'] / params['mu'][0]
+
+    for i in range(params['nfiles']):
+        wallx.append([])
+        wally.append([])
+        wallz.append([])
+        for j in range(len(spc[0]) - 1):
+            dx = spc[i][j+1] - spc[i][j]
+            wallx[i].append(abs(dx) * np.sqrt(abs(shear[i][j])/rho[i][j]) / kinvis[i][j])
+            wally[i].append((params['dyplus'] * np.sqrt(abs(shear[i][j])/rho[i][j])) / kinvis[i][j])
+            wallz[i].append((params['dzplus'] * np.sqrt(abs(shear[i][j])/rho[i][j])) / kinvis[i][j])
+        spc[i].pop()
+
+    return (spc, wallx, wally, wallz)
+
+
 def boundary_layer_adjustment(factor, u, params):
     """ Adjust boundary layer turbulence intensity """
 
@@ -279,6 +316,20 @@ def boundary_layer_adjustment(factor, u, params):
 
     return (u)
 
+def mean_tangential_velocity(up, vp, params):
+    """ Compute mean tangential velocity """
+
+    ut = []
+    for i in range(params['nfilesBLtu']):
+        ut.append([])
+        if (i != 2):
+            ut[i] = (up[i] * math.cos(params['theta'][i]*math.pi/180) + 
+                    vp[i] * math.sin(params['theta'][i]*math.pi/180))
+        else:
+            ut[i] = (up[i] * math.cos(params['theta'][i]*math.pi/180) -
+                    vp[i] * math.sin(params['theta'][i]*math.pi/180))
+
+    return (ut)
 
 def WriteDataToCSV(filename, headers, s, up, vp, ump, taumz, tke, tu):
     """
